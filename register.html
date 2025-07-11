@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - World Youth Skills Day 2025</title>
+    <meta name="description" content="Register for World Youth Skills Day 2025 - Join thousands of young minds in our global skills assessment platform.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="register.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo" aria-label="WYSD 2025 Home">
+                <div class="logo-icon">🌟</div>
+                <span>WYSD 2025</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <ul class="nav-links" role="menubar">
+                <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+                <li role="none"><a href="register.html" class="active" role="menuitem">Register</a></li>
+                <li role="none"><a href="login.html" role="menuitem">Login</a></li>
+                <li role="none"><a href="leaderboard.html" role="menuitem">Leaderboard</a></li>
+            </ul>
+
+            <!-- Mobile Menu Toggle -->
+            <button 
+                class="mobile-menu-toggle" 
+                onclick="toggleMobileMenu()" 
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="mobileNavMenu"
+            >
+                ☰
+            </button>
+        </nav>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="closeMobileMenu()"></div>
+    
+    <!-- Mobile Navigation Menu -->
+    <div class="mobile-nav-menu" id="mobileNavMenu" role="dialog" aria-modal="true" aria-labelledby="mobileNavTitle">
+        <div class="mobile-nav-header">
+            <div class="mobile-nav-title" id="mobileNavTitle">
+                <div class="logo-icon">🌟</div>
+                WYSD 2025
+            </div>
+            <button 
+                class="mobile-close-btn" 
+                onclick="closeMobileMenu()" 
+                aria-label="Close navigation menu"
+            >
+                ×
+            </button>
+        </div>
+        
+        <div class="mobile-nav-content">
+            <ul class="mobile-nav-links" role="menu">
+                <li role="none"><a href="index.html" role="menuitem">🏠 Home</a></li>
+                <li role="none"><a href="register.html" class="active" role="menuitem">📝 Register</a></li>
+                <li role="none"><a href="login.html" role="menuitem">🔐 Login</a></li>
+                <li role="none"><a href="leaderboard.html" role="menuitem">🏆 Leaderboard</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="form-container" id="registerContainer">
+                <div class="form-content">
+                    <h2>Join World Youth Skills Day 2025</h2>
+                    <p class="form-subtitle">Create your account and be part of a global community of young learners</p>
+                    
+                    <div id="alertContainer"></div>
+
+                    <form id="registrationForm">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" name="age" min="1" max="100" placeholder="Enter your age" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" minlength="6" placeholder="Create a strong password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                        </div>
+                        <button type="submit" class="btn primary">
+                            📝 Register Now
+                        </button>
+                        <div class="text-center">
+                            <small>Already have an account? <a href="login.html">Login here</a></small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+   <script src="js/register.js"></script>
+</body>
+</html>

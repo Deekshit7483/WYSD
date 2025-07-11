@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - World Youth Skills Day 2025</title>
+    <meta name="description" content="Login to World Youth Skills Day 2025 - Access your dashboard and participate in our global skills assessment platform.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo" aria-label="WYSD 2025 Home">
+                <div class="logo-icon">🌟</div>
+                <span>WYSD 2025</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <ul class="nav-links" role="menubar">
+                <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+                <li role="none"><a href="register.html" role="menuitem">Register</a></li>
+                <li role="none"><a href="login.html" class="active" role="menuitem">Login</a></li>
+                <li role="none"><a href="leaderboard.html" role="menuitem">Leaderboard</a></li>
+            </ul>
+
+            <!-- Mobile Menu Toggle -->
+            <button 
+                class="mobile-menu-toggle" 
+                onclick="toggleMobileMenu()" 
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="mobileNavMenu"
+            >
+                ☰
+            </button>
+        </nav>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="closeMobileMenu()"></div>
+    
+    <!-- Mobile Navigation Menu -->
+    <div class="mobile-nav-menu" id="mobileNavMenu" role="dialog" aria-modal="true" aria-labelledby="mobileNavTitle">
+        <div class="mobile-nav-header">
+            <div class="mobile-nav-title" id="mobileNavTitle">
+                <div class="logo-icon">🌟</div>
+                WYSD 2025
+            </div>
+            <button 
+                class="mobile-close-btn" 
+                onclick="closeMobileMenu()" 
+                aria-label="Close navigation menu"
+            >
+                ×
+            </button>
+        </div>
+        
+        <div class="mobile-nav-content">
+            <ul class="mobile-nav-links" role="menu">
+                <li role="none"><a href="index.html" role="menuitem">🏠 Home</a></li>
+                <li role="none"><a href="register.html" role="menuitem">📝 Register</a></li>
+                <li role="none"><a href="login.html" class="active" role="menuitem">🔐 Login</a></li>
+                <li role="none"><a href="leaderboard.html" role="menuitem">🏆 Leaderboard</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="form-container">
+                <div class="form-content">
+                    <h2>Welcome Back to WYSD 2025</h2>
+                    
+                    <div class="login-tabs">
+                        <button class="login-tab active" onclick="switchLoginTab('user')">👤 User Login</button>
+                        <button class="login-tab" onclick="switchLoginTab('admin')">🔧 Admin Login</button>
+                    </div>
+
+                    <div id="alertContainer"></div>
+
+                    <!-- User Login Form -->
+                    <form id="userLoginForm" style="display: block;">
+                        <div class="form-group">
+                            <label for="userEmail">Email Address</label>
+                            <input type="email" id="userEmail" name="userEmail" placeholder="Enter your email address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="userPassword">Password</label>
+                            <input type="password" id="userPassword" name="userPassword" placeholder="Enter your password" required>
+                        </div>
+                        <button type="submit" class="btn primary">🔐 Login as User</button>
+                        <div class="text-center">
+                            <small>Don't have an account? <a href="register.html">Register here</a></small>
+                        </div>
+                    </form>
+
+                    <!-- Admin Login Form -->
+                    <form id="adminLoginForm" style="display: none;">
+                        <div class="form-group">
+                            <label for="adminEmail">Admin Email</label>
+                            <input type="email" id="adminEmail" name="adminEmail" placeholder="Enter admin email address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminPassword">Admin Password</label>
+                            <input type="password" id="adminPassword" name="adminPassword" placeholder="Enter admin password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="adminKey">Admin Access Key</label>
+                            <input type="password" id="adminKey" name="adminKey" placeholder="Enter admin access key" required>
+                        </div>
+                        <button type="submit" class="btn admin">🔧 Login as Admin</button>
+                        <div class="text-center">
+                            <small class="admin-warning">⚠️ Admin access requires special credentials</small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/login.js"></script>
+</body>
+</html>

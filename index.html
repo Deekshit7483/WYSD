@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Youth Skills Day 2025 - Empowering Tomorrow's Leaders</title>
+    <meta name="description" content="Join World Youth Skills Day 2025 - A global initiative to test and develop mathematical skills among youth. Participate in our comprehensive assessment program.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary-color: #64748b;
+            --accent-color: #10b981;
+            --accent-hover: #059669;
+            --danger-color: #ef4444;
+            --danger-hover: #dc2626;
+            --warning-color: #f59e0b;
+            --warning-hover: #d97706;
+            --background-primary: #ffffff;
+            --background-secondary: #f8fafc;
+            --background-accent: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #64748b;
+            --border-color: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Professional Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            height: 80px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: translateY(-1px);
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Desktop Navigation */
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .nav-links a.active {
+            color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.1);
+            font-weight: 600;
+        }
+
+        /* User Info Section */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            line-height: 1.2;
+        }
+
+        .user-badge {
+            background: linear-gradient(135deg, var(--accent-color), #06d6a0);
+            color: white;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .logout-btn {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .logout-btn:hover {
+            background: var(--danger-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 1.125rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .mobile-menu-toggle:hover {
+            background: var(--primary-hover);
+            transform: scale(1.05);
+        }
+
+        .mobile-menu-toggle:active {
+            transform: scale(0.95);
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-nav-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: min(400px, 85vw);
+            height: 100%;
+            background: var(--background-primary);
+            box-shadow: var(--shadow-xl);
+            transition: right 0.3s ease;
+            z-index: 1002;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-nav-menu.open {
+            right: 0;
+        }
+
+        .mobile-nav-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mobile-nav-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .mobile-close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--radius-md);
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .mobile-nav-content {
+            flex: 1;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .mobile-nav-links li {
+            margin-bottom: 0.25rem;
+        }
+
+        .mobile-nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 1rem;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-radius: var(--radius-lg);
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .mobile-nav-links a:hover {
+            background: var(--background-accent);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+            transform: translateX(0.25rem);
+        }
+
+        .mobile-nav-links a.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            border-left-color: var(--warning-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .mobile-user-section {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+            margin-top: auto;
+        }
+
+        .mobile-user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--background-secondary);
+            border-radius: var(--radius-lg);
+        }
+
+        /* Professional Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0 5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-xl);
+            margin: 2rem 0;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: heroFloat 8s ease-in-out infinite;
+        }
+
+        @keyframes heroFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(180deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.1;
+            letter-spacing: -0.025em;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.375rem);
+            margin-bottom: 2.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
+            max-width: 42rem;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.5;
+        }
+
+        .hero-welcome {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            margin-bottom: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 32rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-welcome h2 {
+            color: white;
+            margin-bottom: 0.75rem;
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+
+        .hero-welcome p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.125rem;
+        }
+
+        /* Professional Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: var(--radius-lg);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin: 0.5rem;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .btn:hover::before {
+            width: 200%;
+            height: 200%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            color: white;
+        }
+
+        .btn.secondary {
+            background: linear-gradient(135deg, var(--secondary-color), #475569);
+            color: white;
+        }
+
+        .btn.success {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+        }
+
+        .btn.warning {
+            background: linear-gradient(135deg, var(--warning-color), var(--warning-hover));
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Professional Quick Actions */
+        .quick-actions {
+            background: var(--background-primary);
+            padding: 3rem 2.5rem;
+            border-radius: var(--radius-xl);
+            margin: 3rem 0;
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border-color);
+        }
+
+        .quick-actions h2 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 2.25rem;
+            font-weight: 700;
+        }
+
+        .quick-actions-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            margin-bottom: 3rem;
+            max-width: 32rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .action-card {
+            background: var(--background-secondary);
+            padding: 2.5rem 2rem;
+            border-radius: var(--radius-xl);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(16, 185, 129, 0.05));
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .action-card:hover::before {
+            transform: scale(1.5);
+        }
+
+        .action-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-color);
+        }
+
+        .action-card-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.75rem;
+            margin: 0 auto 1.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .action-card h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.375rem;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+
+        .action-card p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Professional Countdown */
+        .countdown {
+            background: var(--background-primary);
+            padding: 3rem 2rem;
+            border-radius: var(--radius-xl);
+            margin: 3rem 0;
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border-color);
+        }
+
+        .countdown h2 {
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .countdown-display {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 2rem 1.5rem;
+            border-radius: var(--radius-xl);
+            min-width: 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .countdown-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .countdown-item .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
+            position: relative;
+            z-index: 2;
+            line-height: 1;
+        }
+
+        .countdown-item .label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Test Available Section */
+        .test-available {
+            background: linear-gradient(135deg, var(--accent-color), #06d6a0);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: var(--radius-xl);
+            text-align: center;
+            margin: 3rem 0;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .test-available::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: testPulse 6s ease-in-out infinite;
+        }
+
+        @keyframes testPulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        .test-available h2 {
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
+        }
+
+        .test-available p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 2;
+            max-width: 32rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* About Section */
+        .about-section {
+            background: var(--background-primary);
+            padding: 4rem 2.5rem;
+            border-radius: var(--radius-xl);
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+            max-width: 56rem;
+            margin: 3rem auto;
+            border: 1px solid var(--border-color);
+        }
+
+        .about-section h2 {
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            font-size: 2.25rem;
+            font-weight: 700;
+        }
+
+        .about-section p {
+            line-height: 1.8;
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+        }
+
+        /* Professional Footer */
+        .footer {
+            background: var(--background-primary);
+            backdrop-filter: blur(20px);
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .footer-description {
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            font-size: 1.125rem;
+            max-width: 48rem;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .footer-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+            margin: 2rem 0;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-tertiary);
+            font-size: 0.875rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-copyright {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-developer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(16, 185, 129, 0.1));
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Demo Controls */
+        .demo-controls {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--background-primary);
+            padding: 1rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border-color);
+            z-index: 999;
+            max-width: 250px;
+        }
+
+        .demo-controls h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .demo-controls button {
+            width: 100%;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .demo-status {
+            background: var(--background-secondary);
+            padding: 0.75rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .demo-login-section {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .demo-login-section h4 {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .hero {
+                padding: 3rem 0 4rem;
+                margin: 1.5rem 0;
+            }
+
+            .quick-actions {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .action-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .countdown {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .countdown-display {
+                gap: 1rem;
+            }
+
+            .countdown-item {
+                min-width: 80px;
+                padding: 1.5rem 1rem;
+            }
+
+            .countdown-item .number {
+                font-size: 2rem;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+
+            .footer-links {
+                gap: 1.5rem;
+                justify-content: center;
+            }
+
+            .demo-controls {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 2rem auto;
+                width: 100%;
+                max-width: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .countdown-item .number {
+                font-size: 1.75rem;
+            }
+
+            .hero-welcome h2 {
+                font-size: 1.5rem;
+            }
+
+            .mobile-nav-menu {
+                width: 100%;
+                right: -100%;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .about-section {
+                padding: 3rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo" aria-label="WYSD 2025 Home">
+                <div class="logo-icon">🌟</div>
+                <span>WYSD 2025</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <ul class="nav-links" id="guestNav" role="menubar">
+                <li role="none"><a href="index.html" class="active" role="menuitem">Home</a></li>
+                <li role="none"><a href="register.html" role="menuitem">Register</a></li>
+                <li role="none"><a href="login.html" role="menuitem">Login</a></li>
+                <li role="none"><a href="leaderboard.html" role="menuitem">Leaderboard</a></li>
+            </ul>
+
+            <!-- User Navigation (Hidden by default) -->
+            <ul class="nav-links hidden" id="userNav" role="menubar">
+                <li role="none"><a href="index.html" class="active" role="menuitem">Home</a></li>
+                <li role="none"><a href="dashboard.html" role="menuitem">Dashboard</a></li>
+                <li role="none"><a href="test.html" role="menuitem">Test</a></li>
+                <li role="none"><a href="leaderboard.html" role="menuitem">Leaderboard</a></li>
+            </ul>
+
+            <!-- Desktop User Info -->
+            <div class="user-info hidden" id="userInfo">
+                <div class="user-avatar" id="userAvatar" aria-label="User Avatar">U</div>
+                <div class="user-details">
+                    <span class="user-name" id="userName">User</span>
+                    <span class="user-badge">PARTICIPANT</span>
+                </div>
+                <button class="logout-btn" onclick="logout()" aria-label="Logout">Logout</button>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button 
+                class="mobile-menu-toggle" 
+                onclick="toggleMobileMenu()" 
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="mobileNavMenu"
+            >
+                ☰
+            </button>
+        </nav>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="closeMobileMenu()"></div>
+    
+    <!-- Mobile Navigation Menu -->
+    <div class="mobile-nav-menu" id="mobileNavMenu" role="dialog" aria-modal="true" aria-labelledby="mobileNavTitle">
+        <div class="mobile-nav-header">
+            <div class="mobile-nav-title" id="mobileNavTitle">
+                <div class="logo-icon">🌟</div>
+                WYSD 2025
+            </div>
+            <button 
+                class="mobile-close-btn" 
+                onclick="closeMobileMenu()" 
+                aria-label="Close navigation menu"
+            >
+                ×
+            </button>
+        </div>
+        
+        <div class="mobile-nav-content">
+            <!-- Guest Mobile Navigation -->
+            <ul class="mobile-nav-links" id="mobileGuestNav" role="menu">
+                <li role="none"><a href="index.html" class="active" role="menuitem">🏠 Home</a></li>
+                <li role="none"><a href="register.html" role="menuitem">📝 Register</a></li>
+                <li role="none"><a href="login.html" role="menuitem">🔐 Login</a></li>
+                <li role="none"><a href="leaderboard.html" role="menuitem">🏆 Leaderboard</a></li>
+            </ul>
+
+            <!-- User Mobile Navigation (Hidden by default) -->
+            <ul class="mobile-nav-links hidden" id="mobileUserNav" role="menu">
+                <li role="none"><a href="index.html" class="active" role="menuitem">🏠 Home</a></li>
+                <li role="none"><a href="dashboard.html" role="menuitem">📊 Dashboard</a></li>
+                <li role="none"><a href="test.html" role="menuitem">📝 Test</a></li>
+                <li role="none"><a href="leaderboard.html" role="menuitem">🏆 Leaderboard</a></li>
+            </ul>
+            
+            <!-- Mobile User Section -->
+            <div class="mobile-user-section hidden" id="mobileUserSection">
+                <div class="mobile-user-info">
+                    <div class="user-avatar" id="mobileUserAvatar">U</div>
+                    <div>
+                        <div class="user-name" id="mobileUserName">User</div>
+                        <div class="user-badge">PARTICIPANT</div>
+                    </div>
+                </div>
+                <button class="btn primary" onclick="logout()" style="width: 100%;">
+                    🔐 Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo Controls -->
+    <div class="demo-controls">
+        <h3>🕐 Timer Demo Controls</h3>
+        <div class="demo-status" id="demoStatus">
+            Current Status: Loading...
+        </div>
+        <button class="btn secondary" onclick="simulateBeforeJuly15()">
+            📅 Before July 15th
+        </button>
+        <button class="btn success" onclick="simulateJuly15()">
+            🎯 July 15th (Test Available)
+        </button>
+        <button class="btn primary" onclick="resetToActualTime()">
+            🔄 Reset to Real Time
+        </button>
+        
+        <div class="demo-login-section">
+            <h4>🔐 Login Demo</h4>
+            <button class="btn warning" onclick="simulateLogin()">
+                👤 Simulate Login
+            </button>
+            <button class="btn secondary" onclick="simulateLogout()">
+                🚪 Simulate Logout
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Loading State -->
+        <div id="loadingState" class="hero">
+            <div class="loading">
+                <div class="spinner"></div>
+                <h2>Loading Your Experience...</h2>
+                <p>Preparing the World Youth Skills Day platform</p>
+            </div>
+        </div>
+
+        <!-- Guest User Content -->
+        <div id="guestContent" class="hidden">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>World Youth Skills Day 2025</h1>
+                    <p class="hero-subtitle">
+                        Empowering the next generation through comprehensive skills assessment and development. 
+                        Join thousands of young minds in shaping the future.
+                    </p>
+                    <div>
+                        <a href="login.html" class="btn primary">
+                            🔐 Login to Continue
+                        </a>
+                        <a href="register.html" class="btn secondary">
+                            📝 Register Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logged-in User Content -->
+        <div id="userContent" class="hidden">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>World Youth Skills Day 2025</h1>
+                    <div class="hero-welcome">
+                        <h2>Welcome back! 👋</h2>
+                        <p>Ready to showcase your skills and compete with talented individuals worldwide?</p>
+                    </div>
+                    <div id="userActionButtons">
+                        <!-- Buttons will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <h2>🚀 Quick Actions</h2>
+                <p class="quick-actions-subtitle">
+                    Access your personalized dashboard and explore available features
+                </p>
+                <div class="actions-grid">
+                    <div class="action-card">
+                        <div class="action-card-icon">📊</div>
+                        <h3>Personal Dashboard</h3>
+                        <p>Monitor your progress, view detailed analytics, and track your performance metrics</p>
+                        <a href="dashboard.html" class="btn secondary">Access Dashboard</a>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-card-icon">🏆</div>
+                        <h3>Global Leaderboard</h3>
+                        <p>See how you rank against participants worldwide and discover top performers</p>
+                        <a href="leaderboard.html" class="btn secondary">View Rankings</a>
+                    </div>
+                    <div class="action-card" id="testActionCard">
+                        <div class="action-card-icon">📝</div>
+                        <h3>Skills Assessment</h3>
+                        <p id="testActionText">Participate in our comprehensive mathematical skills evaluation</p>
+                        <div id="testActionButton">
+                            <!-- Button will be dynamically inserted -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Countdown Timer (shown when test is not available) -->
+        <div class="countdown" id="countdownSection">
+            <h2 id="countdownTitle">Assessment Available July 15th</h2>
+            <div class="countdown-display" id="countdownDisplay">
+                <div class="countdown-item">
+                    <span class="number" id="days">00</span>
+                    <span class="label">Days</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="number" id="hours">00</span>
+                    <span class="label">Hours</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="number" id="minutes">00</span>
+                    <span class="label">Minutes</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="number" id="seconds">00</span>
+                    <span class="label">Seconds</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Available Section (shown when test is available) -->
+        <div class="test-available hidden" id="testAvailableSection">
+            <h2>🎯 Skills Assessment Now Available!</h2>
+            <p>
+                The World Youth Skills Day mathematical assessment is ready. 
+                Demonstrate your abilities and compete for recognition on our global platform.
+            </p>
+            <a href="test.html" class="btn" style="background: white; color: var(--accent-color); font-weight: 600;">
+                📝 Begin Assessment
+            </a>
+        </div>
+
+        <div class="about-section">
+            <h2>About World Youth Skills Day</h2>
+            <p>
+                World Youth Skills Day is celebrated annually on July 15th to highlight the strategic importance 
+                of equipping young people with skills for employment, decent work, and entrepreneurship. 
+                Our platform provides a comprehensive assessment environment where participants can demonstrate 
+                their mathematical abilities, receive detailed feedback, and connect with a global community 
+                of young learners committed to excellence and continuous improvement.
+            </p>
+        </div>
+    </div>
+
+    <!-- Professional Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <div class="logo-icon">🌟</div>
+                WYSD 2025
+            </div>
+            <p class="footer-description">
+                Empowering the next generation through comprehensive skills development and assessment. 
+                Join us in celebrating World Youth Skills Day 2025 and be part of a global movement 
+                towards educational excellence.
+            </p>
+            
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="leaderboard.html">Leaderboard</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+                <a href="#privacy">Privacy Policy</a>
+                <a href="#terms">Terms of Service</a>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <span>© 2025 World Youth Skills Day. All rights reserved.</span>
+                </div>
+                <div class="footer-developer">
+                    💻 Made by Deekshith H R ❤️
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Global variables for timer control
+        let countdownInterval;
+        let simulatedDate = null; // null means use real time
+        let currentUser = null;
+        let isLoggedIn = false; // Track actual login state
+
+        // Demo control functions
+        window.simulateBeforeJuly15 = function() {
+            simulatedDate = new Date('2025-07-10T10:30:00');
+            updateDemoStatus('Simulating: July 10th, 2025 (Before July 15th)');
+            updateCountdown();
+            setupUserButtons();
+        };
+
+        window.simulateJuly15 = function() {
+            simulatedDate = new Date('2025-07-15T00:00:00');
+            updateDemoStatus('Simulating: July 15th, 2025 (Test Available)');
+            updateCountdown();
+            setupUserButtons();
+        };
+
+        window.resetToActualTime = function() {
+            simulatedDate = null;
+            updateDemoStatus('Using Real Time: ' + new Date().toLocaleDateString());
+            updateCountdown();
+            setupUserButtons();
+        };
+
+        // Demo login/logout functions
+        window.simulateLogin = function() {
+            const demoUser = {
+                email: 'demo@wysd2025.com',
+                name: 'Demo User',
+                uid: 'demo-uid-' + Date.now()
+            };
+
+            // Store in localStorage
+            localStorage.setItem('wysd_user', JSON.stringify(demoUser));
+            
+            // Update state
+            currentUser = demoUser;
+            isLoggedIn = true;
+            
+            // Update UI
+            showContent(true, demoUser);
+            updateDemoStatus('Demo User Logged In: ' + demoUser.email);
+        };
+
+        window.simulateLogout = function() {
+            // Clear session
+            localStorage.removeItem('wysd_user');
+            
+            // Update state
+            currentUser = null;
+            isLoggedIn = false;
+            
+            // Update UI
+            showContent(false);
+            updateDemoStatus('User Logged Out - Showing Guest Content');
+        };
+
+        function updateDemoStatus(status) {
+            const statusElement = document.getElementById('demoStatus');
+            if (statusElement) {
+                statusElement.textContent = status;
+            }
+        }
+
+        // Mobile navigation functions
+        window.toggleMobileMenu = function() {
+            const overlay = document.getElementById('mobileNavOverlay');
+            const menu = document.getElementById('mobileNavMenu');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (!overlay || !menu || !toggle) return;
+            
+            overlay.classList.add('active');
+            menu.classList.add('open');
+            toggle.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = 'hidden';
+            
+            const firstMenuItem = menu.querySelector('a[role="menuitem"]');
+            if (firstMenuItem) firstMenuItem.focus();
+        };
+
+        window.closeMobileMenu = function() {
+            const overlay = document.getElementById('mobileNavOverlay');
+            const menu = document.getElementById('mobileNavMenu');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (!overlay || !menu || !toggle) return;
+            
+            overlay.classList.remove('active');
+            menu.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+            toggle.focus();
+        };
+
+        // Generate user avatar initial
+        function generateAvatar(name) {
+            const initial = name ? name.charAt(0).toUpperCase() : 'U';
+            const avatarElements = [
+                document.getElementById('userAvatar'),
+                document.getElementById('mobileUserAvatar')
+            ];
+            
+            avatarElements.forEach(element => {
+                if (element) element.textContent = initial;
+            });
+        }
+
+        // Check if user is logged in - FIXED VERSION
+        function checkAuthStatus() {
+            const userSession = localStorage.getItem('wysd_user');
+            
+            if (userSession) {
+                try {
+                    const userData = JSON.parse(userSession);
+                    // Validate the session data
+                    if (userData && userData.email) {
+                        return userData;
+                    } else {
+                        // Invalid session data, remove it
+                        localStorage.removeItem('wysd_user');
+                        return null;
+                    }
+                } catch (e) {
+                    // Invalid JSON, remove it
+                    localStorage.removeItem('wysd_user');
+                    return null;
+                }
+            }
+            
+            // Return null if no valid session exists
+            return null;
+        }
+
+        // Show content based on login status - FIXED VERSION
+        function showContent(loggedIn, user = null) {
+            const elements = {
+                loadingState: document.getElementById('loadingState'),
+                guestContent: document.getElementById('guestContent'),
+                userContent: document.getElementById('userContent'),
+                guestNav: document.getElementById('guestNav'),
+                userNav: document.getElementById('userNav'),
+                userInfo: document.getElementById('userInfo'),
+                userName: document.getElementById('userName'),
+                mobileGuestNav: document.getElementById('mobileGuestNav'),
+                mobileUserNav: document.getElementById('mobileUserNav'),
+                mobileUserSection: document.getElementById('mobileUserSection'),
+                mobileUserName: document.getElementById('mobileUserName')
+            };
+
+            // Hide loading state
+            if (elements.loadingState) {
+                elements.loadingState.classList.add('hidden');
+            }
+
+            // Update login state
+            isLoggedIn = loggedIn;
+            currentUser = user;
+
+            if (loggedIn && user) {
+                // Show logged-in user content
+                elements.guestContent?.classList.add('hidden');
+                elements.userContent?.classList.remove('hidden');
+                
+                // Desktop navigation
+                elements.guestNav?.classList.add('hidden');
+                elements.userNav?.classList.remove('hidden');
+                elements.userInfo?.classList.remove('hidden');
+                
+                // Mobile navigation
+                elements.mobileGuestNav?.classList.add('hidden');
+                elements.mobileUserNav?.classList.remove('hidden');
+                elements.mobileUserSection?.classList.remove('hidden');
+                
+                // Update user info
+                const displayName = user.name || user.email || 'User';
+                if (elements.userName) {
+                    elements.userName.textContent = displayName;
+                }
+                if (elements.mobileUserName) {
+                    elements.mobileUserName.textContent = displayName;
+                }
+                
+                // Generate avatar
+                generateAvatar(displayName);
+                
+                // Setup user-specific buttons
+                setupUserButtons();
+            } else {
+                // Show guest content
+                elements.guestContent?.classList.remove('hidden');
+                elements.userContent?.classList.add('hidden');
+                
+                // Desktop navigation
+                elements.guestNav?.classList.remove('hidden');
+                elements.userNav?.classList.add('hidden');
+                elements.userInfo?.classList.add('hidden');
+                
+                // Mobile navigation
+                elements.mobileGuestNav?.classList.remove('hidden');
+                elements.mobileUserNav?.classList.add('hidden');
+                elements.mobileUserSection?.classList.add('hidden');
+            }
+
+            // Always update countdown
+            updateCountdown();
+        }
+
+        // Setup buttons based on test availability
+        function setupUserButtons() {
+            const userActionButtons = document.getElementById('userActionButtons');
+            const testActionButton = document.getElementById('testActionButton');
+            const testActionText = document.getElementById('testActionText');
+            
+            if (!userActionButtons || !testActionButton || !testActionText) return;
+            
+            const isTestAvailable = checkTestAvailability();
+            
+            if (isTestAvailable) {
+                // Test is available
+                userActionButtons.innerHTML = `
+                    <a href="test.html" class="btn success">
+                        📝 Begin Assessment
+                    </a>
+                    <a href="dashboard.html" class="btn secondary">
+                        📊 View Dashboard
+                    </a>
+                    <a href="leaderboard.html" class="btn primary">
+                        🏆 Global Rankings
+                    </a>
+                `;
+                
+                testActionText.textContent = "The comprehensive skills assessment is now available. Demonstrate your abilities and compete globally.";
+                testActionButton.innerHTML = '<a href="test.html" class="btn success">Begin Assessment</a>';
+            } else {
+                // Test not available yet
+                const timeLeft = getTimeUntilTest();
+                
+                userActionButtons.innerHTML = `
+                    <a href="dashboard.html" class="btn secondary">
+                        📊 View Dashboard
+                    </a>
+                    <a href="leaderboard.html" class="btn primary">
+                        🏆 Current Rankings
+                    </a>
+                `;
+                
+                testActionText.textContent = `Assessment will be available on July 15th. ${timeLeft}`;
+                testActionButton.innerHTML = '<button class="btn" disabled style="opacity: 0.6;">Assessment Coming Soon</button>';
+            }
+        }
+
+        // Check if test is available
+        function checkTestAvailability() {
+            const currentTime = simulatedDate || new Date();
+            const targetDate = new Date('2025-07-15T00:00:00');
+            return currentTime >= targetDate;
+        }
+
+        // Get time until test
+        function getTimeUntilTest() {
+            const currentTime = simulatedDate || new Date();
+            const targetDate = new Date('2025-07-15T00:00:00');
+            const distance = targetDate.getTime() - currentTime.getTime();
+
+            if (distance <= 0) {
+                return "Assessment is now available!";
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            
+            if (days > 0) {
+                return `${days} day${days > 1 ? 's' : ''} remaining`;
+            } else {
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                return `${hours} hour${hours > 1 ? 's' : ''} remaining`;
+            }
+        }
+
+        // Enhanced countdown timer
+        function updateCountdown() {
+            const currentTime = simulatedDate || new Date();
+            const targetDate = new Date('2025-07-15T00:00:00');
+            const distance = targetDate.getTime() - currentTime.getTime();
+
+            const countdownSection = document.getElementById('countdownSection');
+            const testAvailableSection = document.getElementById('testAvailableSection');
+            const countdownTitle = document.getElementById('countdownTitle');
+
+            if (distance > 0) {
+                // Show countdown - test not available yet
+                countdownSection?.classList.remove('hidden');
+                testAvailableSection?.classList.add('hidden');
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Update countdown title based on time remaining
+                if (countdownTitle) {
+                    if (days > 1) {
+                        countdownTitle.textContent = `Assessment Available July 15th - ${days} Days Remaining`;
+                    } else if (days === 1) {
+                        countdownTitle.textContent = `Assessment Available Tomorrow!`;
+                    } else if (hours > 0) {
+                        countdownTitle.textContent = `Assessment Available Today - ${hours} Hours Remaining`;
+                    } else {
+                        countdownTitle.textContent = `Assessment Available Very Soon!`;
+                    }
+                }
+
+                // Update countdown display
+                const timeElements = {
+                    days: document.getElementById('days'),
+                    hours: document.getElementById('hours'),
+                    minutes: document.getElementById('minutes'),
+                    seconds: document.getElementById('seconds')
+                };
+
+                if (timeElements.days) timeElements.days.textContent = days.toString().padStart(2, '0');
+                if (timeElements.hours) timeElements.hours.textContent = hours.toString().padStart(2, '0');
+                if (timeElements.minutes) timeElements.minutes.textContent = minutes.toString().padStart(2, '0');
+                if (timeElements.seconds) timeElements.seconds.textContent = seconds.toString().padStart(2, '0');
+            } else {
+                // Test is available - hide countdown, show test available section
+                countdownSection?.classList.add('hidden');
+                testAvailableSection?.classList.remove('hidden');
+            }
+        }
+
+        // Enhanced logout function - FIXED VERSION
+        window.logout = function() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear all session data
+                localStorage.removeItem('wysd_user');
+                sessionStorage.removeItem('wysd_user');
+                
+                // Reset state variables
+                currentUser = null;
+                isLoggedIn = false;
+                
+                // Close mobile menu if open
+                closeMobileMenu();
+                
+                // Update UI to show guest content
+                showContent(false);
+                
+                // Update demo status
+                updateDemoStatus('User logged out - Showing guest content');
+                
+                // Optional: Show success message
+                console.log('User successfully logged out');
+            }
+        };
+
+        // Initialize page
+        function initializePage() {
+            // Check for existing user session
+            const user = checkAuthStatus();
+            
+            if (user) {
+                // User is logged in
+                currentUser = user;
+                isLoggedIn = true;
+                showContent(true, user);
+                updateDemoStatus('User Logged In: ' + user.email);
+            } else {
+                // User is not logged in
+                currentUser = null;
+                isLoggedIn = false;
+                showContent(false);
+                updateDemoStatus('Guest User - Not Logged In');
+            }
+
+            // Start countdown timer (updates every second)
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the page after a brief loading simulation
+            setTimeout(initializePage, 1000);
+
+            // Mobile menu event listeners
+            document.addEventListener('click', function(e) {
+                const menu = document.getElementById('mobileNavMenu');
+                const toggle = document.querySelector('.mobile-menu-toggle');
+                
+                if (menu && menu.classList.contains('open') && 
+                    !menu.contains(e.target) && 
+                    toggle && !toggle.contains(e.target)) {
+                    closeMobileMenu();
+                }
+            });
+
+            // Handle escape key to close mobile menu
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    const menu = document.getElementById('mobileNavMenu');
+                    if (menu && menu.classList.contains('open')) {
+                        closeMobileMenu();
+                    }
+                }
+            });
+
+            // Prevent mobile menu from closing when clicking inside
+            const mobileMenu = document.getElementById('mobileNavMenu');
+            if (mobileMenu) {
+                mobileMenu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+
+            // Handle mobile menu link clicks
+            const mobileLinks = document.querySelectorAll('.mobile-nav-links a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    setTimeout(closeMobileMenu, 100);
+                });
+            });
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+        });
+
+        // Debug function to check current state
+        window.debugState = function() {
+            console.log('Current State:', {
+                isLoggedIn: isLoggedIn,
+                currentUser: currentUser,
+                localStorage: localStorage.getItem('wysd_user'),
+                simulatedDate: simulatedDate
+            });
+        };
+    </script>
+</body>
+</html>

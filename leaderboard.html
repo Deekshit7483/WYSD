@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Leaderboard - World Youth Skills Day 2025</title>
+    <meta name="description" content="View the global leaderboard for World Youth Skills Day 2025 - See top performers and track your ranking">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="leaderboard.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo" aria-label="WYSD 2025 Home">
+                <div class="logo-icon">🌟</div>
+                <span>WYSD 2025</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <ul class="nav-links" role="menubar">
+                <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+                <li role="none"><a href="dashboard.html" role="menuitem">Dashboard</a></li>
+                <li role="none"><a href="test.html" role="menuitem">Test</a></li>
+                <li role="none"><a href="leaderboard.html" class="active" role="menuitem">Leaderboard</a></li>
+            </ul>
+
+            <!-- Desktop User Info -->
+            <div class="user-info" id="userInfo">
+                <div class="user-avatar" id="userAvatar" aria-label="User Avatar">U</div>
+                <div class="user-details">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <span class="user-badge">PARTICIPANT</span>
+                </div>
+                <button class="logout-btn" onclick="logout()" aria-label="Logout">Logout</button>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button 
+                class="mobile-menu-toggle" 
+                onclick="toggleMobileMenu()" 
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="mobileNavMenu"
+            >
+                ☰
+            </button>
+        </nav>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="closeMobileMenu()"></div>
+    
+    <!-- Mobile Navigation Menu -->
+    <div class="mobile-nav-menu" id="mobileNavMenu" role="dialog" aria-modal="true" aria-labelledby="mobileNavTitle">
+        <div class="mobile-nav-header">
+            <div class="mobile-nav-title" id="mobileNavTitle">
+                <div class="logo-icon">🌟</div>
+                WYSD 2025
+            </div>
+            <button 
+                class="mobile-close-btn" 
+                onclick="closeMobileMenu()" 
+                aria-label="Close navigation menu"
+            >
+                ×
+            </button>
+        </div>
+        
+        <div class="mobile-nav-content">
+            <ul class="mobile-nav-links" role="menu">
+                <li role="none"><a href="index.html" role="menuitem">🏠 Home</a></li>
+                <li role="none"><a href="dashboard.html" role="menuitem">📊 Dashboard</a></li>
+                <li role="none"><a href="test.html" role="menuitem">📝 Test</a></li>
+                <li role="none"><a href="leaderboard.html" class="active" role="menuitem">🏆 Leaderboard</a></li>
+            </ul>
+            
+            <div class="mobile-user-section" id="mobileUserSection">
+                <div class="mobile-user-info">
+                    <div class="user-avatar" id="mobileUserAvatar">U</div>
+                    <div>
+                        <div class="user-name" id="mobileUserName">Loading...</div>
+                        <div class="user-badge">PARTICIPANT</div>
+                    </div>
+                </div>
+                <button class="btn primary" onclick="logout()" style="width: 100%;">
+                    🔐 Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1>🏆 Global Leaderboard</h1>
+                <p>
+                    Discover the top performers in our World Youth Skills Day 2025 mathematical assessment.
+                    See where you stand among talented participants worldwide.
+                </p>
+            </div>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <!-- Main Leaderboard -->
+        <div class="leaderboard">
+            <div class="leaderboard-header">
+                <div class="leaderboard-title">
+                    <div class="leaderboard-icon">🏆</div>
+                    <h2>Top Performers</h2>
+                </div>
+                <button class="refresh-btn" onclick="loadLeaderboard()">
+                    🔄 Refresh Rankings
+                </button>
+            </div>
+
+            <!-- Podium Section for Top 3 -->
+            <div class="podium-section" id="podiumSection" style="display: none;">
+                <div class="podium" id="podium">
+                    <!-- Top 3 will be populated here -->
+                </div>
+            </div>
+
+            <!-- Leaderboard Content -->
+            <div class="leaderboard-content">
+                <div id="leaderboardContent">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <h3>Loading Global Rankings...</h3>
+                        <p>Fetching the latest assessment results from around the world</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="last-updated" id="lastUpdated"></div>
+        </div>
+
+        <!-- Statistics Section -->
+        <div class="stats-section" id="statsSection" style="display: none;">
+            <h3>📊 Competition Statistics</h3>
+            <div class="stats-grid" id="statsGrid">
+                <!-- Statistics will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Professional Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <div class="logo-icon">🌟</div>
+                WYSD 2025
+            </div>
+            <p class="footer-description">
+                Empowering the next generation through comprehensive skills development and assessment. 
+                Join us in celebrating World Youth Skills Day 2025 and be part of a global movement 
+                towards educational excellence.
+            </p>
+            
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="test.html">Assessment</a>
+                <a href="leaderboard.html">Leaderboard</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+                <a href="#privacy">Privacy Policy</a>
+                <a href="#terms">Terms of Service</a>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <span>© 2025 World Youth Skills Day. All rights reserved.</span>
+                </div>
+                <div class="footer-developer">
+                    💻 Made by Deekshith H R ❤️
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="js/leaderboard.js"></script>
+</body>
+</html>

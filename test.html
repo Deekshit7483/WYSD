@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skills Assessment - World Youth Skills Day 2025</title>
+    <meta name="description" content="Take the official World Youth Skills Day 2025 mathematical assessment - A secure, timed test environment">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="test.css">
+</head>
+<body>
+    <!-- Security Overlay -->
+    <div class="security-overlay" id="securityOverlay">
+        <div class="security-message">
+            <h2>⚠️ Security Alert</h2>
+            <p>Suspicious activity detected. Please follow the test guidelines.</p>
+        </div>
+    </div>
+
+    <!-- Custom Dialog -->
+    <div class="dialog-overlay" id="dialogOverlay">
+        <div class="dialog">
+            <div class="dialog-header">
+                <div class="dialog-icon warning" id="dialogIcon">⚠️</div>
+                <div class="dialog-title" id="dialogTitle">Confirmation Required</div>
+            </div>
+            <div class="dialog-content">
+                <div class="dialog-message" id="dialogMessage">
+                    Are you sure you want to proceed?
+                </div>
+                <div class="dialog-actions" id="dialogActions">
+                    <button class="btn secondary" id="dialogCancel">Cancel</button>
+                    <button class="btn primary" id="dialogConfirm">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <nav>
+            <a href="index.html" class="logo" aria-label="WYSD 2025 Home">
+                <div class="logo-icon">🌟</div>
+                <span>WYSD 2025</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <ul class="nav-links" role="menubar">
+                <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+                <li role="none"><a href="dashboard.html" role="menuitem">Dashboard</a></li>
+                <li role="none"><a href="test.html" class="active" role="menuitem">Assessment</a></li>
+                <li role="none"><a href="leaderboard.html" role="menuitem">Leaderboard</a></li>
+            </ul>
+
+            <!-- Desktop User Info -->
+            <div class="user-info" id="userInfo">
+                <div class="user-avatar" id="userAvatar" aria-label="User Avatar">U</div>
+                <div class="user-details">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <span class="user-badge">PARTICIPANT</span>
+                </div>
+                <button class="logout-btn" onclick="logout()" aria-label="Logout">Logout</button>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button 
+                class="mobile-menu-toggle" 
+                onclick="toggleMobileMenu()" 
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="mobileNavMenu"
+            >
+                ☰
+            </button>
+        </nav>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="closeMobileMenu()"></div>
+    
+    <!-- Mobile Navigation Menu -->
+    <div class="mobile-nav-menu" id="mobileNavMenu" role="dialog" aria-modal="true" aria-labelledby="mobileNavTitle">
+        <div class="mobile-nav-header">
+            <div class="mobile-nav-title" id="mobileNavTitle">
+                <div class="logo-icon">🌟</div>
+                WYSD 2025
+            </div>
+            <button 
+                class="mobile-close-btn" 
+                onclick="closeMobileMenu()" 
+                aria-label="Close navigation menu"
+            >
+                ×
+            </button>
+        </div>
+        
+        <div class="mobile-nav-content">
+            <ul class="mobile-nav-links" role="menu">
+                <li role="none"><a href="index.html" role="menuitem">🏠 Home</a></li>
+                <li role="none"><a href="dashboard.html" role="menuitem">📊 Dashboard</a></li>
+                <li role="none"><a href="test.html" class="active" role="menuitem">📝 Assessment</a></li>
+                <li role="none"><a href="leaderboard.html" role="menuitem">🏆 Leaderboard</a></li>
+            </ul>
+            
+            <div class="mobile-user-section" id="mobileUserSection">
+                <div class="mobile-user-info">
+                    <div class="user-avatar" id="mobileUserAvatar">U</div>
+                    <div>
+                        <div class="user-name" id="mobileUserName">Loading...</div>
+                        <div class="user-badge">PARTICIPANT</div>
+                    </div>
+                </div>
+                <button class="btn danger" onclick="logout()" style="width: 100%;">
+                    🔐 Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="test-container">
+            <div class="test-header">
+                <div class="test-title">
+                    <h2>Skills Assessment</h2>
+                    <span class="security-badge">🔒 SECURE</span>
+                </div>
+                <div class="timer" id="timer">05:00</div>
+            </div>
+
+            <div class="progress-container" id="progressContainer" style="display: none;">
+                <div class="progress-text" id="progressText">Question 1 of 10</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 10%"></div>
+                </div>
+            </div>
+
+            <div class="test-content">
+                <div id="alertContainer"></div>
+                <div id="testContent">
+                    <div class="loading-container">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text">Initializing Assessment</div>
+                        <div class="loading-subtext">Preparing secure test environment...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/test.js"></script>
+</body>
+</html>

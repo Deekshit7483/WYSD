@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Results - World Youth Skills Day 2025</title>
+    <link rel="stylesheet" href="result.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">WYSD 2025</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="test.html">Test</a></li>
+                <li><a href="leaderboard.html">Leaderboard</a></li>
+            </ul>
+            <div class="user-info">
+                <span class="user-name" id="userName">User</span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="result-container">
+            <div id="alertContainer"></div>
+            <div id="resultContent">
+                <!-- Results will be loaded here -->
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <h3>Loading your results...</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/result.js"></script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - World Youth Skills Day 2025</title>
+    <meta name="description" content="Your personalized dashboard for World Youth Skills Day 2025 - Track progress, view achievements, and manage your profile">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h3>Loading Dashboard...</h3>
+            <p>Preparing your personalized experience</p>
+        </div>
+    </div>
+
+    <header>
+        <nav>
+            <a href="index.html" class="logo" aria-label="WYSD 2025 Home">
+                <div class="logo-icon">🌟</div>
+                <span>WYSD 2025</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <ul class="nav-links" role="menubar">
+                <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+                <li role="none"><a href="dashboard.html" class="active" role="menuitem">Dashboard</a></li>
+                <li role="none"><a href="test.html" role="menuitem">Assessment</a></li>
+                <li role="none"><a href="leaderboard.html" role="menuitem">Leaderboard</a></li>
+            </ul>
+
+            <!-- Desktop User Info -->
+            <div class="user-info" id="userInfo">
+                <div class="user-avatar" id="userAvatar" aria-label="User Avatar">U</div>
+                <div class="user-details">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <span class="user-badge">PARTICIPANT</span>
+                </div>
+                <button class="logout-btn" onclick="logout()" aria-label="Logout">Logout</button>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button 
+                class="mobile-menu-toggle" 
+                onclick="toggleMobileMenu()" 
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="mobileNavMenu"
+            >
+                ☰
+            </button>
+        </nav>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="closeMobileMenu()"></div>
+    
+    <!-- Mobile Navigation Menu -->
+    <div class="mobile-nav-menu" id="mobileNavMenu" role="dialog" aria-modal="true" aria-labelledby="mobileNavTitle">
+        <div class="mobile-nav-header">
+            <div class="mobile-nav-title" id="mobileNavTitle">
+                <div class="logo-icon">🌟</div>
+                WYSD 2025
+            </div>
+            <button 
+                class="mobile-close-btn" 
+                onclick="closeMobileMenu()" 
+                aria-label="Close navigation menu"
+            >
+                ×
+            </button>
+        </div>
+        
+        <div class="mobile-nav-content">
+            <ul class="mobile-nav-links" role="menu">
+                <li role="none"><a href="index.html" role="menuitem">🏠 Home</a></li>
+                <li role="none"><a href="dashboard.html" class="active" role="menuitem">📊 Dashboard</a></li>
+                <li role="none"><a href="test.html" role="menuitem">📝 Assessment</a></li>
+                <li role="none"><a href="leaderboard.html" role="menuitem">🏆 Leaderboard</a></li>
+            </ul>
+            
+            <div class="mobile-user-section">
+                <div class="mobile-user-info">
+                    <div class="user-avatar" id="mobileUserAvatar">U</div>
+                    <div>
+                        <div class="user-name" id="mobileUserName">Loading...</div>
+                        <div class="user-badge">PARTICIPANT</div>
+                    </div>
+                </div>
+                <button class="btn danger" onclick="logout()" style="width: 100%;">
+                    🔐 Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Welcome Hero Section -->
+        <div class="welcome-hero">
+            <div class="welcome-content">
+                <h1>Welcome back, <span id="welcomeUserName">User</span>! 👋</h1>
+                <p>Track your progress and continue your journey to excellence</p>
+                
+                <div class="welcome-stats">
+                    <div class="welcome-stat">
+                        <span class="stat-number" id="welcomeTestStatus">--</span>
+                        <span class="stat-label">Test Status</span>
+                    </div>
+                    <div class="welcome-stat">
+                        <span class="stat-number" id="welcomeScore">--</span>
+                        <span class="stat-label">Best Score</span>
+                    </div>
+                    <div class="welcome-stat">
+                        <span class="stat-number" id="welcomeRank">--</span>
+                        <span class="stat-label">Global Rank</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Performance Overview -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <div class="section-icon">📊</div>
+                    <div class="section-title">
+                        <h3>Performance Overview</h3>
+                        <p>Your current statistics and achievements</p>
+                    </div>
+                </div>
+                
+                <div class="performance-cards">
+                    <div class="performance-card">
+                        <div class="card-content">
+                            <span class="card-number" id="scoreCard">--</span>
+                            <span class="card-label">Score</span>
+                        </div>
+                    </div>
+                    <div class="performance-card secondary">
+                        <div class="card-content">
+                            <span class="card-number" id="rankCard">--</span>
+                            <span class="card-label">Rank</span>
+                        </div>
+                    </div>
+                    <div class="performance-card warning">
+                        <div class="card-content">
+                            <span class="card-number" id="timeCard">--</span>
+                            <span class="card-label">Best Time</span>
+                        </div>
+                    </div>
+                    <div class="performance-card" id="statusCard">
+                        <div class="card-content">
+                            <span class="card-number" id="statusText">READY</span>
+                            <span class="card-label">Status</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <div class="section-icon">🚀</div>
+                    <div class="section-title">
+                        <h3>Quick Actions</h3>
+                        <p>What would you like to do today?</p>
+                    </div>
+                </div>
+                
+                <div class="quick-actions">
+                    <div class="action-item" onclick="window.location.href='test.html'">
+                        <h4>📝 Take Skills Assessment</h4>
+                        <p>Challenge yourself with our comprehensive mathematical evaluation</p>
+                        <a href="test.html" class="btn success">Start Assessment</a>
+                    </div>
+                    <div class="action-item" onclick="window.location.href='leaderboard.html'">
+                        <h4>🏆 View Global Rankings</h4>
+                        <p>See how you rank against participants worldwide</p>
+                        <a href="leaderboard.html" class="btn primary">View Leaderboard</a>
+                    </div>
+                    <div class="action-item" onclick="showUserProfile()">
+                        <h4>👤 Manage Your Profile</h4>
+                        <p>View and update your account information and preferences</p>
+                        <button class="btn secondary" onclick="showUserProfile()">View Profile</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Tracking -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <div class="section-icon">📈</div>
+                    <div class="section-title">
+                        <h3>Progress Tracking</h3>
+                        <p>Monitor your improvement over time</p>
+                    </div>
+                </div>
+                
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span class="progress-label">Mathematical Skills</span>
+                        <span class="progress-value" id="mathProgress">--</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="mathProgressBar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span class="progress-label">Speed & Accuracy</span>
+                        <span class="progress-value" id="speedProgress">--</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="speedProgressBar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span class="progress-label">Overall Performance</span>
+                        <span class="progress-value" id="overallProgress">--</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="overallProgressBar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <div class="section-icon">🕒</div>
+                    <div class="section-title">
+                        <h3>Recent Activity</h3>
+                        <p>Your latest actions and achievements</p>
+                    </div>
+                </div>
+                
+                <div id="activityFeed">
+                    <div class="activity-item">
+                        <div class="activity-icon">🎯</div>
+                        <div class="activity-content">
+                            <div class="activity-title">Welcome to WYSD 2025!</div>
+                            <div class="activity-time">Account created</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data View Section -->
+        <div id="userDataView"></div>
+    </div>
+
+    <!-- Professional Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <div class="logo-icon">🌟</div>
+                WYSD 2025
+            </div>
+            <p class="footer-description">
+                Empowering the next generation through comprehensive skills development and assessment. 
+                Join us in celebrating World Youth Skills Day 2025 and be part of a global movement 
+                towards educational excellence.
+            </p>
+            
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="test.html">Assessment</a>
+                <a href="leaderboard.html">Leaderboard</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+                <a href="#privacy">Privacy Policy</a>
+                <a href="#terms">Terms of Service</a>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <span>© 2025 World Youth Skills Day. All rights reserved.</span>
+                </div>
+                <div class="footer-developer">
+                    💻 Made by Deekshith H R ❤️
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

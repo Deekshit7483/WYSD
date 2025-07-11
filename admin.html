@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - World Youth Skills Day 2025</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h3>Loading Admin Panel...</h3>
+            <p>Verifying administrator privileges</p>
+        </div>
+    </div>
+
+    <header>
+        <nav>
+            <div class="logo">WYSD 2025 - Admin</div>
+            
+            <!-- Desktop Navigation -->
+            <ul class="nav-links">
+                <li><a href="#" onclick="showAdminWarning('home')" id="homeLink">🏠 Home</a></li>
+                <li><a href="admin.html" class="active">🔧 Admin Panel</a></li>
+                <!--<li><a href="#" onclick="showAdminWarning('leaderboard')" id="leaderboardLink">🏆 Leaderboard</a></li>
+                <li><a href="#" onclick="showAdminWarning('dashboard')" id="dashboardLink">📊 Dashboard</a></li>-->
+            </ul>
+            
+            <!-- Desktop User Info -->
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <div class="user-details">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <span class="admin-badge">ADMINISTRATOR</span>
+                </div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+        </nav>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="closeMobileMenu()"></div>
+    
+    <!-- Mobile Navigation Menu -->
+    <div class="mobile-nav-menu" id="mobileNavMenu">
+        <div class="mobile-nav-header">
+            <div>
+                <div style="font-weight: bold; font-size: 1.1rem;">WYSD 2025</div>
+                <div style="font-size: 0.9rem; opacity: 0.9;">Admin Panel</div>
+            </div>
+            <button class="mobile-close-btn" onclick="closeMobileMenu()">×</button>
+        </div>
+        
+        <div class="mobile-nav-content">
+            <ul class="mobile-nav-links">
+                <li><a href="#" onclick="handleMobileNavigation('home')">🏠 Home</a></li>
+                <li><a href="admin.html" class="active">🔧 Admin Panel</a></li>
+                <!--<li><a href="#" onclick="handleMobileNavigation('leaderboard')">🏆 Leaderboard</a></li>
+                <li><a href="#" onclick="handleMobileNavigation('dashboard')">📊 Dashboard</a></li>-->
+            </ul>
+            
+            <div class="mobile-user-section">
+                <div class="mobile-user-info">
+                    <div class="user-avatar" id="mobileUserAvatar">A</div>
+                    <div>
+                        <div class="user-name" id="mobileUserName">Loading...</div>
+                        <div class="admin-badge">ADMINISTRATOR</div>
+                    </div>
+                </div>
+                <button class="btn danger" onclick="logout()" style="width: 100%;">🔐 Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Footer -->
+    <div class="mobile-footer">
+        <div class="mobile-footer-content">
+            <div class="mobile-user-email" id="mobileUserEmail">Loading...</div>
+            <button class="mobile-logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="adminContent" style="display: none;">
+            <div class="nav-lock-warning">
+                🔒 <strong>Admin Session Active:</strong> You are currently in admin mode. Navigation to other pages is restricted for security.
+            </div>
+
+            <div class="admin-panel">
+                <div class="admin-header">
+                    <h2>🛡️ Admin Control Center</h2>
+                    <p>Secure administration of World Youth Skills Day 2025 system</p>
+                </div>
+
+                <div class="session-info" id="sessionInfo">
+                    ✅ Secure admin session established
+                </div>
+
+                <div id="alertContainer"></div>
+                
+                <div class="admin-stats">
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalUsers">0</span>
+                        <span class="stat-label">Total Registrations</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalTests">0</span>
+                        <span class="stat-label">Tests Completed</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="avgScore">0%</span>
+                        <span class="stat-label">Average Score</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="todayTests">0</span>
+                        <span class="stat-label">Tests Today</span>
+                    </div>
+                </div>
+
+                <div class="admin-actions">
+                    <div class="admin-card">
+                        <h3>👥 User Management</h3>
+                        <p>View and manage registered users</p>
+                        <button class="btn" onclick="loadUserData()">View Users</button>
+                        <button class="btn danger" onclick="clearAllUsers()">Clear All Users</button>
+                    </div>
+                    <div class="admin-card">
+                        <h3>📊 Test Management</h3>
+                        <p>Manage test results and settings</p>
+                        <button class="btn" onclick="loadTestResults()">View Results</button>
+                        <button class="btn danger" onclick="clearAllResults()">Clear Results</button>
+                    </div>
+                    <div class="admin-card">
+                        <h3>⚙️ System Settings</h3>
+                        <p>Configure system preferences</p>
+                        <button class="btn secondary" onclick="exportData()">Export Data</button>
+                        <button class="btn success" onclick="refreshStats()">Refresh Stats</button>
+                    </div>
+                    <div class="admin-card">
+                        <h3>📈 Generate Report</h3>
+                        <p>Create comprehensive system reports</p>
+                        <button class="btn warning" onclick="generateReport()">Generate Report</button>
+                        <button class="btn secondary" onclick="openPublicLeaderboard()">View Public Leaderboard</button>
+                    </div>
+                </div>
+
+                <div class="security-section">
+                    <h3>🔒 Security Controls</h3>
+                    <p>Advanced administrative functions and security settings</p>
+                    <button class="btn" onclick="viewSystemLogs()" style="background: white; color: #ff6b6b;">📋 System Logs</button>
+                    <button class="btn" onclick="backupDatabase()" style="background: white; color: #ff6b6b;">💾 Backup Database</button>
+                    <button class="btn" onclick="forceLogoutAllUsers()" style="background: white; color: #ff6b6b;">⚠️ Force Logout All</button>
+                </div>
+
+                <div id="adminDataView"></div>
+            </div>
+        </div>
+
+        <!-- Access Denied Screen -->
+        <div id="accessDenied" style="display: none;">
+            <div class="access-denied">
+                <h2>🚫 Access Denied</h2>
+                <p>You do not have administrator privileges to access this page.</p>
+                <p>Please contact the system administrator if you believe this is an error.</p>
+                <div>
+                    <a href="index.html" class="btn secondary">🏠 Return Home</a>
+                    <a href="login.html" class="btn">🔐 Login as Admin</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="js/admin.js"></script>
+</body>
+</html>
