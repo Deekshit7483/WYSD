@@ -35,6 +35,282 @@
             </div>
         </div>
     </div>
-    <script src="js/result.js"></script>
+    <script type="module">
+        // Import Firebase functions
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+        import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD2WcLwVWvylk6fiEietUSDRp4JG9PnI8o",
+            authDomain: "wysd-a7d59.firebaseapp.com",
+            projectId: "wysd-a7d59",
+            storageBucket: "wysd-a7d59.firebasestorage.app",
+            messagingSenderId: "942089219233",
+            appId: "1:942089219233:web:4f4a7736325a0602ba94e0",
+            measurementId: "G-FHVP7SJQLH"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let resultData = null;
+
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.innerHTML = `<div class="alert ${type}">${message}</div>`;
+            
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        // Check authentication
+        function checkAuth() {
+            const userSession = localStorage.getItem('wysd_user');
+            if (!userSession) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            
+            try {
+                const userData = JSON.parse(userSession);
+                return userData;
+            } catch (e) {
+                localStorage.removeItem('wysd_user');
+                window.location.href = 'login.html';
+                return null;
+            }
+        }
+
+        // Load test results
+        function loadTestResults() {
+            const storedResult = localStorage.getItem('wysd_test_result');
+            
+            if (!storedResult) {
+                showNoResultsMessage();
+                return;
+            }
+            
+            try {
+                resultData = JSON.parse(storedResult);
+                displayResults();
+            } catch (error) {
+                console.error('Error parsing result data:', error);
+                showNoResultsMessage();
+            }
+        }
+
+        // Show no results message
+        function showNoResultsMessage() {
+            document.getElementById('resultContent').innerHTML = `
+                <div class="result-header">
+                    <h2 class="result-title">❌ No Results Found</h2>
+                    <p class="result-subtitle">We couldn't find any recent test results.</p>
+                </div>
+                <div class="action-buttons">
+                    <a href="test.html" class="btn success">📝 Take Test</a>
+                    <a href="dashboard.html" class="btn secondary">📊 Dashboard</a>
+                </div>
+            `;
+        }
+
+        // Display test results
+        function displayResults() {
+            const { score, totalQuestions, percentage, timeTaken, completedAt, questions, userAnswers } = resultData;
+            
+            // Calculate time display
+            const minutes = Math.floor(timeTaken / 60);
+            const seconds = timeTaken % 60;
+            const timeDisplay = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Calculate statistics
+            const correctAnswers = score;
+            const incorrectAnswers = userAnswers.filter((answer, index) => 
+                answer !== null && answer !== questions[index].correctAnswer
+            ).length;
+            const unansweredQuestions = userAnswers.filter(answer => answer === null).length;
+            const averageTimePerQuestion = Math.round(timeTaken / totalQuestions);
+            
+            // Determine performance level
+            let performanceClass, performanceMessage, performanceIcon;
+            if (percentage >= 90) {
+                performanceClass = 'performance-excellent';
+                performanceMessage = '🎉 Outstanding Performance! Excellent work!';
+                performanceIcon = '🏆';
+            } else if (percentage >= 80) {
+                performanceClass = 'performance-excellent';
+                performanceMessage = '🎯 Great Job! Well done!';
+                performanceIcon = '⭐';
+            } else if (percentage >= 70) {
+                performanceClass = 'performance-good';
+                performanceMessage = '👍 Good Work! Keep it up!';
+                performanceIcon = '📈';
+            } else if (percentage >= 60) {
+                performanceClass = 'performance-good';
+                performanceMessage = '📚 Not bad! You can do better!';
+                performanceIcon = '💪';
+            } else {
+                performanceClass = 'performance-poor';
+                performanceMessage = '💪 Keep practicing! You\'ll improve!';
+                performanceIcon = '📖';
+            }
+            
+            document.getElementById('resultContent').innerHTML = `
+                <div class="result-header">
+                    <h2 class="result-title">${performanceIcon} Test Completed!</h2>
+                    <p class="result-subtitle">Completed on ${new Date(completedAt).toLocaleString()}</p>
+                </div>
+
+                <div class="score-summary">
+                    <div class="score-card">
+                        <div class="score-value">${score}/${totalQuestions}</div>
+                        <div class="score-label">Questions Correct</div>
+                    </div>
+                    <div class="score-card">
+                        <div class="score-value">${percentage}%</div>
+                        <div class="score-label">Overall Score</div>
+                    </div>
+                    <div class="score-card">
+                        <div class="score-value">${timeDisplay}</div>
+                        <div class="score-label">Time Taken</div>
+                    </div>
+                    <div class="score-card">
+                        <div class="score-value">${averageTimePerQuestion}s</div>
+                        <div class="score-label">Avg. per Question</div>
+                    </div>
+                </div>
+
+                <div class="performance-message ${performanceClass}">
+                    ${performanceMessage}
+                </div>
+
+                <div class="statistics">
+                    <h3 style="text-align: center; margin-bottom: 20px; color: #667eea;">📊 Detailed Statistics</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">${correctAnswers}</div>
+                            <div class="stat-label">Correct Answers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${incorrectAnswers}</div>
+                            <div class="stat-label">Incorrect Answers</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${unansweredQuestions}</div>
+                            <div class="stat-label">Unanswered</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${Math.round((correctAnswers / totalQuestions) * 100)}%</div>
+                            <div class="stat-label">Accuracy Rate</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="question-review">
+                    <div class="review-header">
+                        <h3 style="color: #667eea;">📝 Question Review</h3>
+                        <button class="review-toggle" onclick="toggleQuestionReview()">Show Details</button>
+                    </div>
+                    <div class="questions-list" id="questionsList">
+                        ${generateQuestionReview(questions, userAnswers)}
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="leaderboard.html" class="btn success">🏆 View Leaderboard</a>
+                    <a href="dashboard.html" class="btn secondary">📊 Dashboard</a>
+                    <a href="test.html" class="btn">🔄 Retake Test</a>
+                </div>
+            `;
+        }
+
+        // Generate question review HTML
+        function generateQuestionReview(questions, userAnswers) {
+            return questions.map((question, index) => {
+                const userAnswer = userAnswers[index];
+                const isCorrect = userAnswer === question.correctAnswer;
+                const isUnanswered = userAnswer === null;
+                
+                let statusClass, statusIcon;
+                if (isUnanswered) {
+                    statusClass = 'unanswered';
+                    statusIcon = '⚠️';
+                } else if (isCorrect) {
+                    statusClass = 'correct';
+                    statusIcon = '✅';
+                } else {
+                    statusClass = 'incorrect';
+                    statusIcon = '❌';
+                }
+                
+                return `
+                    <div class="question-item ${statusClass}">
+                        <div class="question-text">
+                            ${statusIcon} Question ${index + 1}: ${question.question} = ?
+                        </div>
+                        <div class="answer-info">
+                            <div class="answer-section user-answer">
+                                <div class="answer-label">Your Answer:</div>
+                                <div class="answer-value">${userAnswer !== null ? userAnswer : 'Not answered'}</div>
+                            </div>
+                            <div class="answer-section correct-answer">
+                                <div class="answer-label">Correct Answer:</div>
+                                <div class="answer-value">${question.correctAnswer}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Toggle question review
+        window.toggleQuestionReview = function() {
+            const questionsList = document.getElementById('questionsList');
+            const toggleBtn = document.querySelector('.review-toggle');
+            
+            if (questionsList.classList.contains('show')) {
+                questionsList.classList.remove('show');
+                toggleBtn.textContent = 'Show Details';
+            } else {
+                questionsList.classList.add('show');
+                toggleBtn.textContent = 'Hide Details';
+            }
+        };
+
+        // Logout function
+        window.logout = function() {
+            auth.signOut().then(() => {
+                localStorage.removeItem('wysd_user');
+                localStorage.removeItem('wysd_test_result');
+                showAlert('✅ Logged out successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+            }).catch((error) => {
+                console.error('Logout error:', error);
+                showAlert('❌ Error logging out.', 'error');
+            });
+        };
+
+        // Initialize result page
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const userSession = checkAuth();
+                if (userSession) {
+                    document.getElementById('userName').textContent = user.email;
+                    loadTestResults();
+                }
+            } else {
+                checkAuth();
+            }
+        });
+
+        // Check auth on page load
+        checkAuth();
+    </script>
 </body>
 </html>
