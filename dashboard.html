@@ -853,9 +853,10 @@
                                     <tr><th>Best Score</th><td>${userData.lastScore ? userData.lastScore + '%' : 'Not taken yet'}</td></tr>
                                 </table>
                             </div>
-                            <div style="margin-top: 2rem; text-align: center;">
+                            <div style="margin-top: 2rem; text-align: center; display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;">
                                 <button class="btn secondary" onclick="hideProfile()">Close Profile</button>
                                 <button class="btn success" onclick="showUserResults()">View Test History</button>
+                                <a href="user-analytics.html" class="btn warning" target="_blank" rel="noopener">View Analytics</a>
                             </div>
                         </div>
                     `;
