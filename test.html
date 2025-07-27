@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="test.css">
+    <link href="test.css" rel="stylesheet">
 </head>
 <body>
     <!-- Security Overlay -->
@@ -122,7 +122,7 @@
         <div class="test-container">
             <div class="test-header">
                 <div class="test-title">
-                    <h2>Skills Assessment</h2>
+                    <h2>Mathematical Skills Assessment</h2>
                     <span class="security-badge">🔒 SECURE</span>
                 </div>
                 <div class="timer" id="timer">05:00</div>
@@ -147,7 +147,8 @@
             </div>
         </div>
     </div>
-        <script type="module">
+
+    <script type="module">
         // Import Firebase functions
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
         import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
@@ -175,37 +176,76 @@
         let userAnswers = [];
         let testStartTime = null;
         let timerInterval = null;
-        let testOverrideEnabled = false; // Set to false for production
         const TEST_DURATION = 300; // 5 minutes in seconds for 10 questions
         let isSubmitting = false;
         let securityViolations = 0;
+        let lastSavedAnswer = null; // Track last saved answer to prevent duplicate messages
 
         // Security measures
         let isTestActive = false;
         let tabSwitchCount = 0;
         let maxTabSwitches = 3;
 
-        // BULLETPROOF Mobile navigation functions
+        // Mathematical categories with enhanced structure
+        const mathCategories = {
+            addition: {
+                name: 'Addition',
+                icon: '➕',
+                color: '#10b981',
+                difficulty: 'Easy',
+                operations: ['+'],
+                ranges: { min: 1, max: 50, result_max: 100 }
+            },
+            subtraction: {
+                name: 'Subtraction', 
+                icon: '➖',
+                color: '#f59e0b',
+                difficulty: 'Easy',
+                operations: ['-'],
+                ranges: { min: 1, max: 80, result_max: 100 }
+            },
+            multiplication: {
+                name: 'Multiplication',
+                icon: '✖️',
+                color: '#8b5cf6',
+                difficulty: 'Medium',
+                operations: ['*'],
+                ranges: { min: 1, max: 12, result_max: 144 }
+            },
+            division: {
+                name: 'Division',
+                icon: '➗',
+                color: '#ef4444',
+                difficulty: 'Medium',
+                operations: ['/'],
+                ranges: { min: 2, max: 12, result_max: 50 }
+            },
+            mixed_basic: {
+                name: 'Mixed Basic',
+                icon: '🔢',
+                color: '#3b82f6',
+                difficulty: 'Medium',
+                operations: ['+', '-', '*'],
+                ranges: { min: 1, max: 25, result_max: 100 }
+            },
+            advanced: {
+                name: 'Advanced Math',
+                icon: '🎯',
+                color: '#dc2626',
+                difficulty: 'Expert',
+                operations: ['advanced'],
+                ranges: { min: 5, max: 30, result_max: 500 }
+            }
+        };
+
+        // Mobile navigation functions
         window.toggleMobileMenu = function() {
-            console.log('🍔 HAMBURGER CLICKED - Mobile menu toggle initiated');
-            
             const overlay = document.getElementById('mobileNavOverlay');
             const menu = document.getElementById('mobileNavMenu');
             const toggle = document.querySelector('.mobile-menu-toggle');
             
-            console.log('🔍 Element check:', {
-                overlay: overlay ? 'FOUND' : 'MISSING',
-                menu: menu ? 'FOUND' : 'MISSING',
-                toggle: toggle ? 'FOUND' : 'MISSING'
-            });
+            if (!overlay || !menu || !toggle) return;
             
-            if (!overlay || !menu || !toggle) {
-                console.error('❌ CRITICAL: Mobile menu elements missing!');
-                alert('Mobile navigation error: Elements not found');
-                return;
-            }
-            
-            // FORCE show overlay and menu with multiple methods
             overlay.style.display = 'block';
             overlay.style.visibility = 'visible';
             overlay.style.opacity = '1';
@@ -215,27 +255,10 @@
             menu.classList.add('open');
             
             toggle.setAttribute('aria-expanded', 'true');
-            
-            // Lock body scroll
             document.body.style.overflow = 'hidden';
-            document.body.style.position = 'fixed';
-            document.body.style.width = '100%';
-            
-            console.log('✅ Mobile menu FORCED open - all methods applied');
-            
-            // Focus management
-            setTimeout(() => {
-                const firstLink = menu.querySelector('a[role="menuitem"]');
-                if (firstLink) {
-                    firstLink.focus();
-                    console.log('👍 Focus set to first menu item');
-                }
-            }, 150);
         };
 
         window.closeMobileMenu = function() {
-            console.log('❌ CLOSE MOBILE MENU - Close sequence initiated');
-            
             const overlay = document.getElementById('mobileNavOverlay');
             const menu = document.getElementById('mobileNavMenu');
             const toggle = document.querySelector('.mobile-menu-toggle');
@@ -256,17 +279,7 @@
                 toggle.setAttribute('aria-expanded', 'false');
             }
             
-            // Restore body scroll
             document.body.style.overflow = '';
-            document.body.style.position = '';
-            document.body.style.width = '';
-            
-            console.log('✅ Mobile menu CLOSED - all cleanup applied');
-            
-            // Return focus
-            if (toggle) {
-                setTimeout(() => toggle.focus(), 100);
-            }
         };
 
         // Enhanced Custom Dialog System
@@ -278,9 +291,6 @@
                 this.title = document.getElementById('dialogTitle');
                 this.message = document.getElementById('dialogMessage');
                 this.actions = document.getElementById('dialogActions');
-                this.cancelBtn = document.getElementById('dialogCancel');
-                this.confirmBtn = document.getElementById('dialogConfirm');
-                
                 this.setupEventListeners();
             }
 
@@ -301,16 +311,11 @@
             show(options) {
                 return new Promise((resolve) => {
                     this.resolve = resolve;
-
-                    // Set icon and styling
                     this.icon.className = `dialog-icon ${options.type || 'warning'}`;
                     this.icon.textContent = options.icon || '⚠️';
-                    
-                    // Set content
                     this.title.textContent = options.title || 'Confirmation';
                     this.message.innerHTML = options.message || 'Are you sure?';
 
-                    // Set up buttons
                     this.actions.innerHTML = '';
                     
                     if (options.showCancel !== false) {
@@ -327,13 +332,8 @@
                     confirmBtn.onclick = () => this.close(true);
                     this.actions.appendChild(confirmBtn);
 
-                    // Show dialog
                     this.overlay.classList.add('active');
-                    
-                    // Focus confirm button
-                    setTimeout(() => {
-                        confirmBtn.focus();
-                    }, 100);
+                    setTimeout(() => confirmBtn.focus(), 100);
                 });
             }
 
@@ -389,11 +389,9 @@
                 if (alertElement) {
                     alertElement.style.opacity = '0';
                     alertElement.style.transform = 'translateY(-20px)';
-                    setTimeout(() => {
-                        alertElement.remove();
-                    }, 300);
+                    setTimeout(() => alertElement.remove(), 300);
                 }
-            }, 5000);
+            }, 3000);
         }
 
         // Smooth loading transitions
@@ -482,8 +480,8 @@
                 e.preventDefault();
                 if (isTestActive) {
                     handleSecurityViolation('Keyboard shortcut blocked');
-                    showSecurityOverlay('⚠️ Security Alert!\n\nKeyboard shortcut blocked.\n\nPlease use only mouse clicks during the test.');
-                    showAlert('⚠️ Keyboard shortcut blocked! Please use only mouse clicks during the test.', 'warning');
+                    showSecurityOverlay('⚠️ Security Alert!\n\nKeyboard shortcut blocked.\n\nPlease use only the interface provided.');
+                    showAlert('⚠️ Keyboard shortcut blocked! Please use only the interface provided.', 'warning');
                 }
                 return false;
             }
@@ -494,8 +492,8 @@
             e.preventDefault();
             if (isTestActive) {
                 handleSecurityViolation('Right-click blocked');
-                showSecurityOverlay('⚠️ Security Alert!\n\nRight-click is disabled during the test.\n\nPlease use only left-click to select answers.');
-                showAlert('⚠️ Right-click disabled during test. Please use left-click to select answers.', 'warning');
+                showSecurityOverlay('⚠️ Security Alert!\n\nRight-click is disabled during the test.\n\nPlease use only the interface provided.');
+                showAlert('⚠️ Right-click disabled during test. Please use the interface provided.', 'warning');
             }
             return false;
         });
@@ -564,160 +562,29 @@
             }
         }
 
-        // Check if test is available (strict date checking)
-        async function checkTestAvailability() {
-            showLoading('Checking Eligibility...', 'Verifying test availability and user status');
-            
-            const today = new Date();
-            const testDate = new Date('2025-07-10');
-            
-            const todayString = today.getFullYear() + '-' + 
-                               String(today.getMonth() + 1).padStart(2, '0') + '-' + 
-                               String(today.getDate()).padStart(2, '0');
-            const testDateString = '2025-07-10';
-            
-            console.log('Today:', todayString, 'Test Date:', testDateString);
-            
-            // Simulate loading time for better UX
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            if (testOverrideEnabled || todayString === testDateString) {
-                checkUserTestStatus();
-            } else {
-                showTestUnavailable(today, testDate);
-            }
-        }
-
-        // Check if user has already taken the test
-        async function checkUserTestStatus() {
-            showLoading('Verifying Status...', 'Checking your test completion status');
-            
-            const currentUser = auth.currentUser;
-            if (!currentUser) {
-                showAlert('Please login to access the test.', 'error');
-                return;
-            }
-
-            try {
-                // Check user registration data for test completion
-                const userQuery = query(collection(db, 'registrations'), where('uid', '==', currentUser.uid));
-                const userSnapshot = await getDocs(userQuery);
-                
-                if (!userSnapshot.empty) {
-                    const userData = userSnapshot.docs[0].data();
-                    
-                    if (userData.hasCompletedTest) {
-                        showTestAlreadyCompleted(userData);
-                        return;
-                    }
-                }
-
-                // Double check with test results
-                const testQuery = query(collection(db, 'test_results'), where('uid', '==', currentUser.uid));
-                const testSnapshot = await getDocs(testQuery);
-                
-                if (!testSnapshot.empty) {
-                    showTestAlreadyCompleted();
-                    return;
-                }
-
-                // User can take the test
-                await generateTest();
-                
-            } catch (error) {
-                console.error('Error checking test status:', error);
-                showAlert('Error checking test eligibility. Please try again.', 'error');
-            }
-        }
-
-        // Show test already completed message
-        function showTestAlreadyCompleted(userData = null) {
-            const lastScore = userData?.lastScore || 'N/A';
-            const lastDate = userData?.lastTestDate ? new Date(userData.lastTestDate).toLocaleDateString() : 'N/A';
-            
-            document.getElementById('testContent').innerHTML = `
-                <div class="fade-in">
-                    <div class="date-banner restricted">
-                        ❌ Assessment Already Completed - Retests Not Allowed
-                    </div>
-                    <div class="message warning">
-                        <h3>🚫 Assessment Already Taken</h3>
-                        <p>You have already completed the World Youth Skills Day Mathematical Assessment. Each participant is allowed only <strong>one attempt</strong>.</p>
-                        
-                        <div style="background: var(--background-secondary); padding: 1.5rem; border-radius: var(--radius-lg); margin: 1.5rem 0;">
-                            <h4>📊 Your Assessment Results:</h4>
-                            <p><strong>Score:</strong> ${lastScore}${typeof lastScore === 'number' ? '%' : ''}</p>
-                            <p><strong>Completed on:</strong> ${lastDate}</p>
-                        </div>
-                        
-                        <div style="margin-top: 2rem;">
-                            <a href="result.html" class="btn success">📊 View Detailed Results</a>
-                            <a href="leaderboard.html" class="btn primary">🏆 View Leaderboard</a>
-                            <a href="dashboard.html" class="btn secondary">📈 My Dashboard</a>
-                        </div>
-                        
-                        <div style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-tertiary);">
-                            <p>This policy ensures fairness for all participants in the competition.</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Show test unavailable message
-        function showTestUnavailable(currentDate, testDate) {
-            const daysRemaining = Math.ceil((testDate - currentDate) / (1000 * 60 * 60 * 24));
-            
-            document.getElementById('testContent').innerHTML = `
-                <div class="fade-in">
-                    <div class="date-banner restricted">
-                        📅 Assessment Available Only on July 15th, 2025
-                    </div>
-                    <div class="message error">
-                        <h3>⏰ Assessment Not Available</h3>
-                        <p>The World Youth Skills Day Mathematical Assessment is <strong>only available on July 15th, 2025</strong>. This ensures all participants have an equal and fair opportunity.</p>
-                        
-                        <div style="background: var(--background-secondary); padding: 1.5rem; border-radius: var(--radius-lg); margin: 1.5rem 0;">
-                            <p><strong>📅 Current date:</strong> ${currentDate.toLocaleDateString()}</p>
-                            <p><strong>🎯 Assessment date:</strong> ${testDate.toLocaleDateString()}</p>
-                            <p><strong>⏳ Days remaining:</strong> ${daysRemaining > 0 ? daysRemaining + ' days' : 'Assessment date has passed'}</p>
-                        </div>
-                        
-                        <div style="margin-top: 2rem;">
-                            <a href="leaderboard.html" class="btn primary">🏆 View Current Rankings</a>
-                            <a href="dashboard.html" class="btn secondary">📊 My Dashboard</a>
-                            <a href="index.html" class="btn success">🏠 Home</a>
-                        </div>
-                        
-                        <div style="margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-tertiary);">
-                            <p><strong>Why this restriction?</strong> To ensure fairness, all participants must take the assessment on the same day under the same conditions.</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Generate test questions with smooth loading
+        // Generate test questions mixing all categories
         async function generateTest() {
-            showLoading('Generating Questions...', 'Creating your personalized mathematical assessment');
+            showLoading('Generating Questions...', 'Creating your personalized mixed mathematics assessment');
             
-            // Simulate realistic loading time
             await new Promise(resolve => setTimeout(resolve, 2000));
             
             testQuestions = [];
-            const operations = ['+', '-', '*', '/'];
+            const categoryKeys = Object.keys(mathCategories);
             
+            // Generate 10 questions with mixed categories
             for (let i = 0; i < 10; i++) {
-                const question = generateMultipleChoiceQuestion(operations);
+                // Randomly select a category for each question
+                const randomCategoryKey = categoryKeys[Math.floor(Math.random() * categoryKeys.length)];
+                const category = mathCategories[randomCategoryKey];
+                
+                const question = generateFillInQuestion(category, randomCategoryKey);
                 testQuestions.push(question);
                 
-                // Update loading progress
                 const progress = Math.round(((i + 1) / 10) * 100);
-                showLoading('Generating Questions...', `Creating question ${i + 1} of 10 (${progress}%)`);
+                showLoading('Generating Questions...', `Creating question ${i + 1} of 10 (${progress}%) - ${category.name}`);
                 await new Promise(resolve => setTimeout(resolve, 200));
             }
             
-            // Initialize user answers array
             userAnswers = new Array(testQuestions.length).fill(null);
             currentQuestionIndex = 0;
             
@@ -727,109 +594,148 @@
             displayTestIntro();
         }
 
-        // Generate a single multiple choice question
-        function generateMultipleChoiceQuestion(operations) {
-            const num1 = Math.floor(Math.random() * 50) + 1;
-            const num2 = Math.floor(Math.random() * 20) + 1;
+        // Generate a fill-in-the-blank question
+        function generateFillInQuestion(category, categoryKey) {
+            const operations = category.operations;
             const operation = operations[Math.floor(Math.random() * operations.length)];
             
-            let question, correctAnswer;
+            let num1, num2, question, correctAnswer, questionType;
             
-            switch (operation) {
-                case '+':
-                    question = `${num1} + ${num2}`;
-                    correctAnswer = num1 + num2;
-                    break;
-                case '-':
-                    const larger = Math.max(num1, num2);
-                    const smaller = Math.min(num1, num2);
-                    question = `${larger} - ${smaller}`;
-                    correctAnswer = larger - smaller;
-                    break;
-                case '*':
-                    const smallerNum1 = Math.floor(Math.random() * 12) + 1;
-                    const smallerNum2 = Math.floor(Math.random() * 12) + 1;
-                    question = `${smallerNum1} × ${smallerNum2}`;
-                    correctAnswer = smallerNum1 * smallerNum2;
-                    break;
-                case '/':
-                    const dividend = num1 * num2;
-                    question = `${dividend} ÷ ${num1}`;
-                    correctAnswer = num2;
-                    break;
-            }
-            
-            // Generate options
-            const options = generateOptions(correctAnswer);
-            
-            return { question, correctAnswer, options };
-        }
-
-        // Generate multiple choice options
-        function generateOptions(correctAnswer) {
-            const options = [correctAnswer];
-            
-            while (options.length < 4) {
-                let wrongAnswer;
-                if (correctAnswer <= 10) {
-                    wrongAnswer = Math.floor(Math.random() * 20) + 1;
-                } else if (correctAnswer <= 50) {
-                    wrongAnswer = correctAnswer + (Math.floor(Math.random() * 41) - 20);
-                } else {
-                    wrongAnswer = correctAnswer + (Math.floor(Math.random() * 61) - 30);
-                }
+            if (category.name === 'Advanced Math' || operation === 'advanced') {
+                // Generate complex multi-step problems
+                const problemTypes = ['two_step', 'word_problem', 'pattern', 'brackets'];
+                questionType = problemTypes[Math.floor(Math.random() * problemTypes.length)];
                 
-                if (wrongAnswer > 0 && !options.includes(wrongAnswer)) {
-                    options.push(wrongAnswer);
+                switch (questionType) {
+                    case 'two_step':
+                        const a = Math.floor(Math.random() * 15) + 5;
+                        const b = Math.floor(Math.random() * 8) + 2;
+                        const c = Math.floor(Math.random() * 6) + 2;
+                        question = `(${a} + ${b}) × ${c} = ?`;
+                        correctAnswer = (a + b) * c;
+                        break;
+                    case 'word_problem':
+                        const apples = Math.floor(Math.random() * 20) + 15;
+                        const eaten = Math.floor(Math.random() * 5) + 2;
+                        const friends = Math.floor(Math.random() * 4) + 2;
+                        question = `Sarah has ${apples} apples. She eats ${eaten} apples, then shares the rest equally among ${friends} friends. How many apples does each friend get?`;
+                        correctAnswer = Math.floor((apples - eaten) / friends);
+                        break;
+                    case 'pattern':
+                        const start = Math.floor(Math.random() * 10) + 3;
+                        const diff = Math.floor(Math.random() * 5) + 2;
+                        const seq = [start, start + diff, start + (diff * 2), start + (diff * 3)];
+                        question = `What comes next in the sequence: ${seq.join(', ')}, ?`;
+                        correctAnswer = start + (diff * 4);
+                        break;
+                    case 'brackets':
+                        const x = Math.floor(Math.random() * 12) + 3;
+                        const y = Math.floor(Math.random() * 8) + 2;
+                        const z = Math.floor(Math.random() * 6) + 2;
+                        question = `${x} × (${y} + ${z}) = ?`;
+                        correctAnswer = x * (y + z);
+                        break;
+                }
+            } else {
+                // Generate basic operation questions
+                const ranges = category.ranges;
+                
+                switch (operation) {
+                    case '+':
+                        num1 = Math.floor(Math.random() * ranges.max) + ranges.min;
+                        num2 = Math.floor(Math.random() * ranges.max) + ranges.min;
+                        question = `${num1} + ${num2} = ?`;
+                        correctAnswer = num1 + num2;
+                        questionType = 'addition';
+                        break;
+                    case '-':
+                        const larger = Math.floor(Math.random() * ranges.max) + ranges.min;
+                        const smaller = Math.floor(Math.random() * (larger - 1)) + 1;
+                        question = `${larger} - ${smaller} = ?`;
+                        correctAnswer = larger - smaller;
+                        questionType = 'subtraction';
+                        break;
+                    case '*':
+                        num1 = Math.floor(Math.random() * ranges.max) + ranges.min;
+                        num2 = Math.floor(Math.random() * ranges.max) + ranges.min;
+                        question = `${num1} × ${num2} = ?`;
+                        correctAnswer = num1 * num2;
+                        questionType = 'multiplication';
+                        break;
+                    case '/':
+                        num2 = Math.floor(Math.random() * ranges.max) + ranges.min;
+                        const result = Math.floor(Math.random() * 15) + 1;
+                        num1 = num2 * result;
+                        question = `${num1} ÷ ${num2} = ?`;
+                        correctAnswer = result;
+                        questionType = 'division';
+                        break;
                 }
             }
             
-            // Shuffle options
-            for (let i = options.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [options[i], options[j]] = [options[j], options[i]];
-            }
-            
-            return options;
+            return { 
+                question, 
+                correctAnswer, 
+                category: categoryKey, 
+                categoryName: category.name,
+                questionType: questionType || operation,
+                difficulty: category.difficulty,
+                categoryIcon: category.icon,
+                categoryColor: category.color
+            };
         }
 
-        // Display test introduction with enhanced UI
+        // Display test introduction
         function displayTestIntro() {
             const today = new Date().toLocaleDateString();
             
             document.getElementById('testContent').innerHTML = `
                 <div class="fade-in">
                     <div class="date-banner">
-                        ✅ Assessment Available Today - ${today}
+                        Assessment Available
                     </div>
                     <div class="message success">
-                        <h3>🎯 Mathematical Skills Assessment</h3>
-                        <p><strong>⚠️ IMPORTANT SECURITY GUIDELINES:</strong></p>
-                        <div style="text-align: left; max-width: 600px; margin: 1.5rem auto;">
-                            <div style="display: grid; gap: 0.75rem; margin: 1.5rem 0;">
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <span style="color: var(--danger-color);">🔒</span>
-                                    <span><strong>One attempt only</strong> - No retests allowed</span>
+                        <div style="background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; padding: 1.5rem; border-radius: var(--radius-lg); margin: 1.5rem 0;">
+                          <div style="display: flex; align-items: center; gap: 1rem; justify-content: center; margin-bottom: 1rem;">
+                                <span style="font-size: 2rem;">🔢</span>
+                                <div style="text-align: left;">
+                                    <div style="font-weight: 700; font-size: 1.5rem;">All Mathematical Operations</div>
+                                    <div style="margin: 0.5rem 0;">Addition, Subtraction, Multiplication, Division & Advanced Problems</div>
                                 </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <span style="color: var(--warning-color);">⏰</span>
+                            </div>
+                        </div>
+                        
+                        <p><strong>⚠️ IMPORTANT ASSESSMENT GUIDELINES:</strong></p>
+                        <div style="text-align: left; max-width: 650px; margin: 1.5rem auto;">
+                            <div style="display: grid; gap: 0.75rem; margin: 1.5rem 0;">
+                               <!-- <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <span style="color: var(--danger-color); font-size: 1.25rem;">🔒</span>
+                                    <span><strong>One attempt only</strong> - No retests allowed</span>
+                                </div> --->
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <span style="color: var(--warning-color); font-size: 1.25rem;">⏰</span>
                                     <span><strong>5 minutes</strong> to complete 10 questions</span>
                                 </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <span style="color: var(--danger-color);">🚫</span>
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <span style="color: var(--primary-color); font-size: 1.25rem;">🔢</span>
+                                    <span><strong>Mixed questions</strong> - All math operations included</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <span style="color: var(--primary-color); font-size: 1.25rem;">✏️</span>
+                                    <span><strong>Fill-in answers</strong> - Type your numerical answer only</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <span style="color: var(--danger-color); font-size: 1.25rem;">🚫</span>
                                     <span><strong>No tab switching</strong> - Max 3 warnings before auto-submit</span>
                                 </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <span style="color: var(--danger-color);">📵</span>
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <span style="color: var(--danger-color); font-size: 1.25rem;">📵</span>
                                     <span><strong>No external tools</strong> - Calculator or notes not allowed</span>
                                 </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <span style="color: var(--accent-color);">👁️</span>
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <span style="color: var(--accent-color); font-size: 1.25rem;">👁️</span>
                                     <span><strong>Stay focused</strong> - Minimize distractions</span>
                                 </div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <span style="color: var(--primary-color);">🎯</span>
-                                    <span><strong>Click to select</strong> - Navigate with Previous/Next buttons</span>
                                 </div>
                             </div>
                         </div>
@@ -838,12 +744,12 @@
                         </div>
                     </div>
                     <div style="text-align: center; margin-top: 2rem;">
-                        <button class="btn success" onclick="startTest()" style="font-size: 1.125rem; padding: 1rem 2rem;">
-                            🚀 Start Secure Assessment
+                        <button class="btn success" onclick="startTest()" style="font-size: 1.125rem; padding: 1rem 2rem; background: linear-gradient(135deg, var(--primary-color), #2563eb);">
+                             Start Test
                         </button>
                         <div style="margin-top: 1rem;">
                             <button class="btn secondary" onclick="window.location.href='dashboard.html'">
-                                ❌ Cancel
+                                 Cancel
                             </button>
                         </div>
                     </div>
@@ -851,61 +757,104 @@
             `;
         }
 
-        // Start the test with custom dialog
+        // Start the test
         window.startTest = async function() {
-            const confirmed = await dialog.confirm(
-                `⚠️ <strong>FINAL CONFIRMATION</strong><br><br>
-                This is your <strong>ONLY attempt</strong> at this assessment. Once started, you cannot retake it.<br><br>
-                Make sure you:<br>
-                • Have a stable internet connection<br>
-                • Are in a quiet environment<br>
-                • Will not switch tabs or use other applications<br><br>
-                Are you ready to begin?`,
-                'Start Assessment',
-                'warning'
-            );
+            showLoading('Starting Assessment...', 'Activating secure test environment');
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            isTestActive = true;
+            document.getElementById('progressContainer').style.display = 'block';
+            startTimer();
+            displayQuestion();
+            showAlert('🔒 Secure assessment environment activated. Good luck!', 'success');
+        };
 
-            if (confirmed) {
-                showLoading('Starting Assessment...', 'Activating secure test environment');
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                
-                isTestActive = true;
-                document.getElementById('progressContainer').style.display = 'block';
-                startTimer();
-                displayQuestion();
-                showAlert('🔒 Secure assessment environment activated. Good luck!', 'success');
+        // Mobile keypad functions
+        window.addNumber = function(num) {
+            const input = document.getElementById('answerInput');
+            if (input) {
+                input.value += num;
+                updateAnswer(input.value);
+                input.focus();
             }
         };
 
-        // Display current question with smooth transitions
+        window.deleteNumber = function() {
+            const input = document.getElementById('answerInput');
+            if (input) {
+                input.value = input.value.slice(0, -1);
+                updateAnswer(input.value);
+                input.focus();
+            }
+        };
+
+        window.clearNumber = function() {
+            const input = document.getElementById('answerInput');
+            if (input) {
+                input.value = '';
+                updateAnswer('');
+                input.focus();
+            }
+        };
+
+        // Display current question with fill-in input and mobile keypad
         function displayQuestion() {
             const question = testQuestions[currentQuestionIndex];
             const progress = ((currentQuestionIndex + 1) / testQuestions.length) * 100;
             
-            // Update progress bar
             document.getElementById('progressText').textContent = `Question ${currentQuestionIndex + 1} of ${testQuestions.length}`;
             document.getElementById('progressFill').style.width = progress + '%';
+            
+            const currentAnswer = userAnswers[currentQuestionIndex] || '';
             
             let html = `
                 <div class="question-container fade-in">
                     <div class="question-header">
-                        <div class="question-number">Question ${currentQuestionIndex + 1}</div>
-                        <div class="question-text">${question.question} = ?</div>
+                        <div class="question-number">Question ${currentQuestionIndex + 1} of ${testQuestions.length}</div>
+                        <div class="question-category" style="background: ${question.categoryColor}; color: white;">
+                            ${question.categoryIcon} ${question.categoryName} - ${question.questionType}
+                        </div>
+                        <div class="question-text">${question.question}</div>
                     </div>
                     
-                    <div class="options-container">
-            `;
-            
-            question.options.forEach((option, index) => {
-                const selectedClass = userAnswers[currentQuestionIndex] === option ? 'selected' : '';
-                html += `
-                    <div class="option ${selectedClass} slide-in-right" onclick="selectOption(${option})" style="animation-delay: ${index * 0.1}s">
-                        ${option}
-                    </div>
-                `;
-            });
-            
-            html += `
+                    <div class="answer-input-container">
+                        <label for="answerInput" style="display: block; margin-bottom: 1rem; font-weight: 600; color: var(--text-secondary);">
+                            Enter your answer (numbers only):
+                        </label>
+                        <input 
+                            type="number" 
+                            class="answer-input" 
+                            id="answerInput"
+                            placeholder="Your answer"
+                            value="${currentAnswer}"
+                            onchange="updateAnswer(this.value)"
+                            onkeyup="updateAnswer(this.value)"
+                            onkeypress="handleEnterKey(event)"
+                            autocomplete="off"
+                            step="1"
+                            min="0"
+                            max="10000"
+                        />
+                        
+                        <!-- Mobile Numeric Keypad -->
+                        <div class="mobile-keypad" id="mobileKeypad">
+                            <button class="keypad-btn" onclick="addNumber('1')" type="button">1</button>
+                            <button class="keypad-btn" onclick="addNumber('2')" type="button">2</button>
+                            <button class="keypad-btn" onclick="addNumber('3')" type="button">3</button>
+                            <button class="keypad-btn" onclick="addNumber('4')" type="button">4</button>
+                            <button class="keypad-btn" onclick="addNumber('5')" type="button">5</button>
+                            <button class="keypad-btn" onclick="addNumber('6')" type="button">6</button>
+                            <button class="keypad-btn" onclick="addNumber('7')" type="button">7</button>
+                            <button class="keypad-btn" onclick="addNumber('8')" type="button">8</button>
+                            <button class="keypad-btn" onclick="addNumber('9')" type="button">9</button>
+                            <button class="keypad-btn clear" onclick="clearNumber()" type="button">C</button>
+                            <button class="keypad-btn" onclick="addNumber('0')" type="button">0</button>
+                            <button class="keypad-btn delete" onclick="deleteNumber()" type="button">⌫</button>
+                        </div>
+                        
+                        <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-tertiary);">
+                            💡 Tip: Press Enter to go to the next question
+                        </div>
                     </div>
                     
                     <div class="navigation-buttons">
@@ -913,14 +862,14 @@
                             ← Previous
                         </button>
                         
-                        <div style="text-align: center; color: var(--text-tertiary); font-size: 0.875rem;">
-                            <p>🔒 Secure Environment Active</p>
+                        <div style="text-align: center; color: var(--text-tertiary); font-size: 0.875rem; padding: 1rem;">
+                            <p style="margin-bottom: 0.5rem;">🔒 Secure Environment Active</p>
                             <p>Tab Switches: ${tabSwitchCount}/${maxTabSwitches} | Security Violations: ${securityViolations}</p>
                         </div>
                         
                         <div>
                             ${currentQuestionIndex === testQuestions.length - 1 ? 
-                                '<button class="btn success" onclick="showSubmitConfirmation()">✅ Submit Assessment</button>' :
+                                '<button class="btn success" onclick="showSubmitConfirmation()">Submit Assessment</button>' :
                                 '<button class="btn primary" onclick="nextQuestion()">Next →</button>'
                             }
                         </div>
@@ -929,27 +878,60 @@
             `;
             
             document.getElementById('testContent').innerHTML = html;
+            
+            // Focus on input after rendering
+            setTimeout(() => {
+                const input = document.getElementById('answerInput');
+                if (input) {
+                    input.focus();
+                    input.select();
+                }
+            }, 100);
         }
 
-        // Select an option with visual feedback
-        window.selectOption = function(selectedValue) {
-            userAnswers[currentQuestionIndex] = selectedValue;
+        // Update answer with reduced alert frequency
+        window.updateAnswer = function(value) {
+            const numValue = value.trim() === '' ? null : parseInt(value);
+            userAnswers[currentQuestionIndex] = numValue;
             
-            // Update UI to show selection with animation
-            document.querySelectorAll('.option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            
-            event.target.classList.add('selected');
-            
-            // Show brief confirmation
-            showAlert(`Selected: ${selectedValue}`, 'success');
+            // Only show "answer saved" message if the answer actually changed and is valid
+            if (numValue !== null && !isNaN(numValue) && lastSavedAnswer !== numValue) {
+                lastSavedAnswer = numValue;
+                // Show a more subtle success message
+                setTimeout(() => {
+                    const alertContainer = document.getElementById('alertContainer');
+                    const existingAlerts = alertContainer.querySelectorAll('.alert.success');
+                    
+                    // Remove any existing "saved" alerts to prevent spam
+                    existingAlerts.forEach(alert => {
+                        if (alert.textContent.includes('Answer saved')) {
+                            alert.remove();
+                        }
+                    });
+                    
+                    // Show new save confirmation
+                   // showAlert(`✓ ${numValue}`, 'success');
+                }, 100);
+            }
+        };
+
+        // Handle Enter key to go to next question
+        window.handleEnterKey = function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                if (currentQuestionIndex < testQuestions.length - 1) {
+                    nextQuestion();
+                } else {
+                    showSubmitConfirmation();
+                }
+            }
         };
 
         // Navigate to previous question
         window.previousQuestion = function() {
             if (currentQuestionIndex > 0) {
                 currentQuestionIndex--;
+                lastSavedAnswer = null; // Reset to allow save message on different question
                 displayQuestion();
             }
         };
@@ -958,16 +940,17 @@
         window.nextQuestion = function() {
             if (currentQuestionIndex < testQuestions.length - 1) {
                 currentQuestionIndex++;
+                lastSavedAnswer = null; // Reset to allow save message on different question
                 displayQuestion();
             }
         };
 
-        // Show submit confirmation with custom dialog
+        // Show submit confirmation
         window.showSubmitConfirmation = async function() {
             const answeredCount = userAnswers.filter(answer => answer !== null).length;
             const unansweredCount = testQuestions.length - answeredCount;
             
-            let message = `You have answered <strong>${answeredCount}</strong> out of <strong>${testQuestions.length}</strong> questions.`;
+            let message = `You have answered <strong>${answeredCount}</strong> out of <strong>${testQuestions.length}</strong> questions in the mixed mathematics assessment.`;
             if (unansweredCount > 0) {
                 message += `<br><br>⚠️ You have <strong>${unansweredCount}</strong> unanswered question(s). Unanswered questions will be marked as incorrect.`;
             }
@@ -981,7 +964,7 @@
             }
         };
 
-        // Start the countdown timer with enhanced visuals
+        // Start the countdown timer
         function startTimer() {
             testStartTime = Date.now();
             let timeLeft = TEST_DURATION;
@@ -994,7 +977,6 @@
                 timerElement.textContent = 
                     `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                 
-                // Change timer appearance based on time remaining
                 if (timeLeft <= 30) {
                     timerElement.style.color = '#ef4444';
                     timerElement.classList.add('warning');
@@ -1028,7 +1010,7 @@
             submitTest();
         }
 
-        // Enhanced Firebase storage with comprehensive error handling
+        // Save test result
         async function saveTestResult(score, percentage, timeTaken) {
             const currentUser = auth.currentUser;
             
@@ -1050,6 +1032,23 @@
                 const averageTimePerQuestion = timeTaken / testQuestions.length;
                 const answeredCount = userAnswers.filter(answer => answer !== null).length;
                 
+                // Calculate category breakdown
+                const categoryStats = {};
+                testQuestions.forEach((q, index) => {
+                    if (!categoryStats[q.category]) {
+                        categoryStats[q.category] = {
+                            name: q.categoryName,
+                            icon: q.categoryIcon,
+                            total: 0,
+                            correct: 0
+                        };
+                    }
+                    categoryStats[q.category].total++;
+                    if (userAnswers[index] === q.correctAnswer) {
+                        categoryStats[q.category].correct++;
+                    }
+                });
+                
                 const testResult = {
                     // Basic test data
                     uid: currentUser.uid,
@@ -1061,16 +1060,29 @@
                     completedAt: new Date().toISOString(),
                     timeTaken: timeTaken,
                     
+                    // Test type information
+                    testType: 'mixed_mathematics',
+                    testTypeName: 'Mixed Mathematics Assessment ',
+                    testDescription: 'All mathematical operations including addition, subtraction, multiplication, division, and advanced problems',
+                    
                     // Detailed answers and questions
                     answers: userAnswers,
                     questions: testQuestions.map((q, index) => ({
                         questionNumber: index + 1,
                         question: q.question,
-                        options: q.options,
                         correctAnswer: q.correctAnswer,
                         userAnswer: userAnswers[index],
-                        isCorrect: userAnswers[index] === q.correctAnswer
+                        isCorrect: userAnswers[index] === q.correctAnswer,
+                        category: q.category,
+                        categoryName: q.categoryName,
+                        questionType: q.questionType,
+                        difficulty: q.difficulty,
+                        categoryIcon: q.categoryIcon,
+                        categoryColor: q.categoryColor
                     })),
+                    
+                    // Category breakdown
+                    categoryStats: categoryStats,
                     
                     // Security and integrity data
                     integrity: {
@@ -1093,7 +1105,7 @@
                     
                     // Technical metadata
                     metadata: {
-                        testVersion: '4.0_professional',
+                        testVersion: '6.0_mixed_mathematics',
                         deviceType: /Mobile|Android|iPhone|iPad/.test(navigator.userAgent) ? 'mobile' : 'desktop',
                         screenResolution: `${screen.width}x${screen.height}`,
                         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -1130,6 +1142,8 @@
                             hasCompletedTest: true,
                             lastTestDate: new Date().toISOString(),
                             lastScore: percentage,
+                            lastTestType: 'mixed_mathematics',
+                            lastTestTypeName: 'Mixed Mathematics Assessment',
                             lastTestId: docRef ? docRef.id : null,
                             totalTestAttempts: (userData.totalTestAttempts || 0) + 1,
                             bestScore: Math.max(percentage, userData.bestScore || 0),
@@ -1148,7 +1162,7 @@
             }
         }
 
-        // Submit test with enhanced UX
+        // Submit test
         async function submitTest() {
             if (isSubmitting) return;
             isSubmitting = true;
@@ -1163,7 +1177,6 @@
                 return;
             }
             
-            // Show enhanced loading state
             showLoading('Submitting Assessment...', 'Securely saving your results and calculating score...');
             
             let score = 0;
@@ -1179,7 +1192,6 @@
             const timeTaken = Math.round((Date.now() - testStartTime) / 1000);
             
             try {
-                // Show progress updates
                 showLoading('Processing Results...', 'Calculating your final score...');
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 
@@ -1189,12 +1201,13 @@
                 showLoading('Finalizing Submission...', 'Completing the submission process...');
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 
-                // Store result in localStorage for result page
                 const resultData = {
                     score: score,
                     totalQuestions: testQuestions.length,
                     percentage: percentage,
                     timeTaken: timeTaken,
+                    testType: 'mixed_mathematics',
+                    testTypeName: 'Mixed Mathematics Assessment',
                     testId: docRef ? docRef.id : null,
                     completedAt: new Date().toISOString(),
                     questions: testQuestions,
@@ -1207,14 +1220,22 @@
                 
                 localStorage.setItem('wysd_test_result', JSON.stringify(resultData));
                 
-                // Success message before redirect
+                // Success message
                 document.getElementById('testContent').innerHTML = `
                     <div class="message success fade-in">
                         <h3>✅ Assessment Submitted Successfully!</h3>
-                        <p>Your assessment has been securely submitted and saved.</p>
-                        <div style="margin: 2rem 0; padding: 1.5rem; background: var(--background-secondary); border-radius: var(--radius-lg);">
-                            <p><strong>Score:</strong> ${score}/${testQuestions.length} (${percentage}%)</p>
-                            <p><strong>Time:</strong> ${Math.floor(timeTaken/60)}m ${timeTaken%60}s</p>
+                        <p>Your Mixed Mathematics assessment has been securely submitted and saved.</p>
+                        <div style="margin: 2rem 0; padding: 2rem; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border-radius: var(--radius-lg);">
+                            <div style="display: flex; align-items: center; gap: 1rem; justify-content: center; margin-bottom: 1rem;">
+                                <span style="font-size: 2rem;">🔢</span>
+                                <h4 style="margin: 0;">Mixed Mathematics Results</h4>
+                            </div>
+                            <div style="text-align: center;">
+                                <p style="margin: 0.5rem 0;"><strong>Score:</strong> ${score}/${testQuestions.length} (${percentage}%)</p>
+                                <p style="margin: 0.5rem 0;"><strong>Time:</strong> ${Math.floor(timeTaken/60)}m ${timeTaken%60}s</p>
+                                <p style="margin: 0.5rem 0;"><strong>Accuracy:</strong> ${percentage}%</p>
+                                <p style="margin: 0.5rem 0;"><strong>Test Type:</strong> Mixed Mathematics Assessment</p>
+                            </div>
                         </div>
                         <div style="margin: 1rem 0;">
                             <div class="loading-spinner" style="width: 32px; height: 32px;"></div>
@@ -1223,7 +1244,6 @@
                     </div>
                 `;
                 
-                // Redirect to result page
                 setTimeout(() => {
                     window.location.href = 'result.html';
                 }, 3000);
@@ -1233,7 +1253,6 @@
                 showAlert('❌ Error saving assessment result. Please try again.', 'error');
                 isSubmitting = false;
                 
-                // Show retry option with custom dialog
                 document.getElementById('testContent').innerHTML = `
                     <div class="message error fade-in">
                         <h3>❌ Submission Failed</h3>
@@ -1248,7 +1267,7 @@
             }
         }
 
-        // Enhanced logout function with confirmation
+        // Logout function
         window.logout = async function() {
             if (isTestActive) {
                 const confirmed = await dialog.confirm(
@@ -1286,186 +1305,68 @@
             }
         });
 
-        // BULLETPROOF Mobile navigation event listeners with extensive debugging
+        // Mobile navigation event listeners
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 DOM LOADED - Initializing BULLETPROOF mobile navigation');
-            
-            // Get all elements
             const overlay = document.getElementById('mobileNavOverlay');
             const menu = document.getElementById('mobileNavMenu');
             const toggle = document.querySelector('.mobile-menu-toggle');
             const closeBtn = document.querySelector('.mobile-close-btn');
             
-            console.log('📋 COMPREHENSIVE element check:', {
-                overlay: overlay ? '✅ FOUND' : '❌ MISSING',
-                menu: menu ? '✅ FOUND' : '❌ MISSING',
-                toggle: toggle ? '✅ FOUND' : '❌ MISSING',
-                closeBtn: closeBtn ? '✅ FOUND' : '❌ MISSING'
-            });
-            
-            // Force initial state
             if (overlay) {
                 overlay.style.display = 'none';
                 overlay.style.visibility = 'hidden';
                 overlay.style.opacity = '0';
                 overlay.classList.remove('active');
-                console.log('🔧 Overlay reset to hidden state');
             }
             
             if (menu) {
                 menu.style.right = '-100%';
                 menu.classList.remove('open');
-                console.log('🔧 Menu reset to closed state');
             }
             
-            // HAMBURGER BUTTON - Multiple event types for maximum compatibility
             if (toggle) {
-                console.log('🍔 Setting up hamburger button events...');
-                
-                // Method 1: Standard click
                 toggle.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('🖱️ CLICK event triggered on hamburger');
                     toggleMobileMenu();
                 });
-                
-                // Method 2: Touch events
-                toggle.addEventListener('touchstart', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('👆 TOUCHSTART event triggered on hamburger');
-                });
-                
-                toggle.addEventListener('touchend', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('👆 TOUCHEND event triggered on hamburger');
-                    toggleMobileMenu();
-                });
-                
-                // Method 3: Pointer events
-                toggle.addEventListener('pointerup', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('👆 POINTERUP event triggered on hamburger');
-                    toggleMobileMenu();
-                });
-                
-                // Method 4: Mouse events
-                toggle.addEventListener('mouseup', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('🖱️ MOUSEUP event triggered on hamburger');
-                    toggleMobileMenu();
-                });
-                
-                console.log('✅ Hamburger button - ALL event types attached');
-            } else {
-                console.error('❌ FATAL: Hamburger button not found in DOM!');
-                // Create emergency hamburger button
-                const nav = document.querySelector('nav');
-                if (nav) {
-                    const emergencyToggle = document.createElement('button');
-                    emergencyToggle.className = 'mobile-menu-toggle';
-                    emergencyToggle.innerHTML = '☰';
-                    emergencyToggle.onclick = toggleMobileMenu;
-                    nav.appendChild(emergencyToggle);
-                    console.log('🚑 Emergency hamburger button created');
-                }
             }
             
-            // CLOSE BUTTON events
             if (closeBtn) {
                 closeBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('❌ Close button CLICKED');
                     closeMobileMenu();
                 });
-                
-                closeBtn.addEventListener('touchend', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('❌ Close button TOUCHED');
-                    closeMobileMenu();
-                });
-                
-                console.log('✅ Close button events attached');
             }
             
-            // OVERLAY click to close
             if (overlay) {
                 overlay.addEventListener('click', function(e) {
                     if (e.target === overlay) {
-                        console.log('🎯 Overlay clicked - closing menu');
-                        closeMobileMenu();
-                    }
-                });
-                
-                overlay.addEventListener('touchend', function(e) {
-                    if (e.target === overlay) {
-                        console.log('🎯 Overlay touched - closing menu');
                         closeMobileMenu();
                     }
                 });
             }
             
-            // ESCAPE key handler
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && menu && menu.classList.contains('open')) {
-                    console.log('⌨️ Escape key pressed - closing menu');
                     closeMobileMenu();
                 }
             });
             
-            // PREVENT menu close on inside click
             if (menu) {
                 menu.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    console.log('📱 Menu inside click - prevented close');
                 });
             }
             
-            // MOBILE LINK handlers
             const mobileLinks = document.querySelectorAll('.mobile-nav-links a');
-            console.log(`🔗 Found ${mobileLinks.length} mobile navigation links`);
-            
-            mobileLinks.forEach((link, index) => {
-                link.addEventListener('click', function(e) {
-                    console.log(`🔗 Mobile link ${index + 1} clicked: ${link.textContent.trim()}`);
+            mobileLinks.forEach((link) => {
+                link.addEventListener('click', function() {
                     setTimeout(() => {
                         closeMobileMenu();
                     }, 100);
                 });
-            });
-            
-            console.log('🎉 BULLETPROOF mobile navigation setup COMPLETE!');
-            
-            // TEST function for debugging
-            window.testMobileMenu = function() {
-                console.log('🧪 TESTING mobile menu functionality...');
-                console.log('Current state:', {
-                    overlayVisible: overlay ? overlay.style.display : 'N/A',
-                    menuPosition: menu ? menu.style.right : 'N/A',
-                    toggleExists: !!toggle
-                });
-                
-                if (toggle) {
-                    console.log('🔧 Manually triggering toggle...');
-                    toggleMobileMenu();
-                } else {
-                    console.log('❌ No toggle button found for testing');
-                }
-            };
-            
-            // Debug info
-            console.log('📱 Mobile navigation debug info:', {
-                windowWidth: window.innerWidth,
-                isMobile: window.innerWidth <= 768,
-                toggleVisible: toggle ? window.getComputedStyle(toggle).display : 'N/A',
-                overlayZIndex: overlay ? window.getComputedStyle(overlay).zIndex : 'N/A',
-                menuZIndex: menu ? window.getComputedStyle(menu).zIndex : 'N/A'
             });
         });
 
@@ -1486,7 +1387,8 @@
                     });
                     
                     generateAvatar(user.email);
-                    checkTestAvailability();
+                    // Generate mixed test directly - no category selection
+                    generateTest();
                 }
             } else {
                 checkAuth();
