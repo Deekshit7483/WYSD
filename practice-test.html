@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Test - World Youth Skills Day 2025</title>
+    <meta name="description"
+        content="Take unlimited practice tests for World Youth Skills Day 2025. Track your progress and improve your skills.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="test.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo" aria-label="WYSD 2025 Home">
+                <div class="logo-icon">🌟</div>
+                <span>WYSD 2025</span>
+            </a>
+            <ul class="nav-links" id="mainNav" role="menubar">
+                <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+                <li role="none"><a href="dashboard.html" role="menuitem">Dashboard</a></li>
+                <li role="none"><a href="test.html" id="assessmentTab" role="menuitem">Assessment</a></li>
+                <li role="none"><a href="leaderboard.html" role="menuitem">Leaderboard</a></li>
+                <li role="none"><a href="practice-test.html" id="practiceTab" role="menuitem">Practice Test</a></li>
+                <li role="none"><a href="analytics.html" id="analyticsTab" role="menuitem">Analytics</a></li>
+                <li role="none"><a href="result.html" role="menuitem">Results</a></li>
+            </ul>
+            <div class="user-info" id="userInfo">
+                <div class="user-avatar" id="userAvatar" aria-label="User Avatar">U</div>
+                <div class="user-details">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <span class="user-badge">PARTICIPANT</span>
+                </div>
+                <button class="logout-btn" onclick="logout()" aria-label="Logout">Logout</button>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="test-container">
+            <div id="practiceTestContent"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+        import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+        import { generatePracticeQuestions, savePracticeAttempt, calculatePracticeStats } from './practice-test.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD2WcLwVWvylk6fiEietUSDRp4JG9PnI8o",
+            authDomain: "wysd-a7d59.firebaseapp.com",
+            projectId: "wysd-a7d59",
+            storageBucket: "wysd-a7d59.firebasestorage.app",
+            messagingSenderId: "942089219233",
+            appId: "1:942089219233:web:4f4a7736325a0602ba94e0",
+            measurementId: "G-FHVP7SJQLH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        function updateNavActive() {
+            const today = new Date();
+            const testDate = new Date('2025-07-15T00:00:00');
+            const assessmentTab = document.getElementById('assessmentTab');
+            const practiceTab = document.getElementById('practiceTab');
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            if (practiceTab) practiceTab.classList.add('active');
+            if (assessmentTab) {
+                if (today >= testDate) {
+                    assessmentTab.classList.add('active');
+                }
+            }
+        }
+        document.addEventListener('DOMContentLoaded', updateNavActive);
+        // User info logic
+        function updateUserInfo(user) {
+            const userName = document.getElementById('userName');
+            const userAvatar = document.getElementById('userAvatar');
+            if (user && user.displayName) {
+                userName.textContent = user.displayName;
+                userAvatar.textContent = user.displayName[0].toUpperCase();
+            } else if (user && user.email) {
+                userName.textContent = user.email;
+                userAvatar.textContent = user.email[0].toUpperCase();
+            } else {
+                userName.textContent = 'Guest';
+                userAvatar.textContent = 'U';
+            }
+        }
+
+        function logout() {
+            auth.signOut().then(() => {
+                window.location.href = 'login.html';
+            });
+        }
+
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+        onAuthStateChanged(auth, (user) => {
+            updateUserInfo(user);
+        });
+
+        // Practice test logic emulating test.html
+        let practiceQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let startTime = null;
+        let timerInterval = null;
+        let questionStartTime = null;
+        const PRACTICE_DURATION = 900; // 15 minutes for 50 questions
+        window.practiceTabSwitchCount = 0;
+        window.practiceTestStartTime = null;
+        window.practiceTestDuration = 0;
+
+        function showLoading(text, subtext) {
+            const container = document.getElementById('practiceTestContent');
+            container.innerHTML = `
+                <div class="loading-container fade-in">
+                    <h3>${text}</h3>
+                    <p>${subtext}</p>
+                </div>
+            `;
+        }
+
+        function startPracticeTest() {
+            showLoading('Generating Questions...', 'Creating your practice test...');
+            setTimeout(() => {
+                practiceQuestions = generatePracticeQuestions();
+                // Add MCQ options to each question for Firestore
+                practiceQuestions.forEach(q => {
+                    let options = [q.correctAnswer];
+                    while (options.length < 4) {
+                        let fake = typeof q.correctAnswer === 'number' ? q.correctAnswer + Math.floor(Math.random() * 10) + 1 : Math.floor(Math.random() * 100) + 1;
+                        if (!options.includes(fake)) options.push(fake);
+                    }
+                    q.options = options.sort(() => Math.random() - 0.5);
+                });
+                userAnswers = new Array(practiceQuestions.length).fill(null);
+                currentQuestionIndex = 0;
+                startTime = Date.now();
+                window.practiceTestStartTime = new Date().toISOString();
+                questionStartTime = Date.now();
+                displayPracticeQuestion();
+            }, 1200);
+        }
+
+        function displayPracticeQuestion() {
+            const q = practiceQuestions[currentQuestionIndex];
+            // Track time taken for previous question
+            if (currentQuestionIndex > 0) {
+                const now = Date.now();
+                const prevQ = practiceQuestions[currentQuestionIndex - 1];
+                prevQ.timeTaken = ((now - questionStartTime) / 1000); // seconds, float
+                questionStartTime = now;
+            }
+            const progress = ((currentQuestionIndex + 1) / practiceQuestions.length) * 100;
+            // Generate MCQ options
+            let options = [q.correctAnswer];
+            while (options.length < 4) {
+                let fake;
+                if (typeof q.correctAnswer === 'number') {
+                    fake = q.correctAnswer + Math.floor(Math.random() * 10) + 1;
+                } else {
+                    fake = Math.floor(Math.random() * 100) + 1;
+                }
+                if (!options.includes(fake)) options.push(fake);
+            }
+            options = options.sort(() => Math.random() - 0.5);
+            let html = `
+                <div id="progressContainer" class="progress-bar" style="margin-bottom:1rem;">
+                    <div id="progressText">Question ${currentQuestionIndex + 1} of ${practiceQuestions.length}</div>
+                    <div style="background:#e3f0ff; border-radius:6px; height:8px; width:100%; margin-top:6px;">
+                        <div id="progressFill" style="background:#2a7ae4; height:8px; border-radius:6px; width:${progress}%"></div>
+                    </div>
+                </div>
+                <div class="question-container fade-in">
+                    <div class="question-header">
+                        <h3>Q${currentQuestionIndex+1}</h3>
+                        <div class="question-text">${q.question}</div>
+                    </div>
+                    <div class="options-container">
+                        ${options.map((opt, idx) => `
+                            <label style="display:block; margin-bottom:8px;">
+                                <input type="radio" name="answerOption" value="${opt}" ${userAnswers[currentQuestionIndex] === opt ? 'checked' : ''} />
+                                ${opt}
+                            </label>
+                        `).join('')}
+                    </div>
+                    <div class="navigation-buttons" style="margin-top:2rem;">
+                        <button class="btn secondary" id="prevBtn" ${currentQuestionIndex === 0 ? 'disabled' : ''}>Previous</button>
+                        <button class="btn primary" id="nextBtn">${currentQuestionIndex === practiceQuestions.length-1 ? 'Finish' : 'Next'}</button>
+                    </div>
+                </div>
+                <div style="margin-top:2rem; text-align:right;">
+                    <button class="btn success" id="submitAnytimeBtn">Submit Test</button>
+                </div>
+            `;
+            document.getElementById('practiceTestContent').innerHTML = html;
+            // Save selected MCQ answer
+            document.querySelectorAll('input[name="answerOption"]').forEach(input => {
+                input.onchange = () => {
+                    userAnswers[currentQuestionIndex] = Number(input.value);
+                };
+            });
+            document.getElementById('prevBtn').onclick = () => {
+                // Save selected answer
+                let selected = document.querySelector('input[name="answerOption"]:checked');
+                userAnswers[currentQuestionIndex] = selected ? Number(selected.value) : null;
+                // Track time for current question before moving back
+                const now = Date.now();
+                q.timeTaken = ((now - questionStartTime)); // seconds, float
+                questionStartTime = now;
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    displayPracticeQuestion();
+                }
+            };
+            document.getElementById('nextBtn').onclick = () => {
+                let selected = document.querySelector('input[name="answerOption"]:checked');
+                userAnswers[currentQuestionIndex] = selected ? Number(selected.value) : null;
+                // Track time for current question before moving forward
+                const now = Date.now();
+                q.timeTaken = ((now - questionStartTime)); // seconds, float
+                questionStartTime = now;
+                if (currentQuestionIndex < practiceQuestions.length-1) {
+                    currentQuestionIndex++;
+                    displayPracticeQuestion();
+                } else {
+                    showPracticeSubmitConfirmation();
+                }
+            };
+            document.getElementById('submitAnytimeBtn').onclick = () => {
+                showPracticeSubmitConfirmation();
+            };
+        }
+
+        function saveCurrentAnswer() {
+            const input = document.getElementById('answerInput');
+            if (input) {
+                const val = input.value;
+                userAnswers[currentQuestionIndex] = val !== '' ? Number(val) : null;
+            }
+        }
+
+        function showPracticeSubmitConfirmation() {
+            document.getElementById('practiceTestContent').innerHTML = `
+                <div class="fade-in">
+                    <div class="message warning">
+                        <h3>Submit Practice Test?</h3>
+                        <p>Are you sure you want to submit your answers? You can take unlimited practice tests.</p>
+                        <button class="btn success" id="submitPracticeTest">Submit Practice Test</button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('submitPracticeTest').onclick = submitPracticeTest;
+        }
+
+        async function submitPracticeTest() {
+            // Save last selected answer
+            let selected = document.querySelector('input[name="answerOption"]:checked');
+            userAnswers[currentQuestionIndex] = selected ? Number(selected.value) : null;
+            // Track time for last question
+            if (practiceQuestions.length > 0) {
+                const now = Date.now();
+                if (practiceQuestions[currentQuestionIndex].timeTaken === undefined) {
+                    practiceQuestions[currentQuestionIndex].timeTaken = ((now - questionStartTime)); // seconds, float
+                }
+            }
+            let userId = null, userEmail = null;
+            try {
+                const { currentUser } = getAuth();
+                userId = currentUser ? currentUser.uid : 'anonymous';
+                userEmail = currentUser ? currentUser.email : '';
+            } catch(e) {
+                userId = 'anonymous';
+                userEmail = '';
+            }
+            // Attach answers to questions
+            if (Array.isArray(practiceQuestions)) {
+                practiceQuestions.forEach((q, i) => q.userAnswer = userAnswers[i]);
+            }
+            // Calculate duration
+            window.practiceTestDuration = ((Date.now() - startTime));
+            // Calculate metrics
+            const metrics = calculatePracticeStats(practiceQuestions);
+            await savePracticeAttempt({ userId, email: userEmail, questions: practiceQuestions, metrics });
+            // Redirect to analytics page
+            window.location.href = 'analytics.html';
+        }
+
+        // Initial UI
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('practiceTestContent');
+            container.innerHTML = `
+                <div class="fade-in" style="text-align:center;">
+                    <h2>Practice Test</h2>
+                    <p>Take unlimited practice tests. Each test has 50 questions from addition, subtraction, multiplication, and division.</p>
+                    <button class="btn primary" id="startPracticeTest">Start Practice Test</button>
+                </div>
+            `;
+            document.getElementById('startPracticeTest').onclick = startPracticeTest;
+            // Tab switch detection for integrity
+            let hidden, visibilityChange;
+            if (typeof document.hidden !== "undefined") {
+                hidden = "hidden";
+                visibilityChange = "visibilitychange";
+            } else if (typeof document.msHidden !== "undefined") {
+                hidden = "msHidden";
+                visibilityChange = "msvisibilitychange";
+            } else if (typeof document.webkitHidden !== "undefined") {
+                hidden = "webkitHidden";
+                visibilityChange = "webkitvisibilitychange";
+            }
+            document.addEventListener(visibilityChange, function() {
+                if (document[hidden]) {
+                    window.practiceTabSwitchCount = (window.practiceTabSwitchCount || 0) + 1;
+                }
+            }, false);
+        });
+    </script>
+</body>
+
+</html>

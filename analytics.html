@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Analytics - World Youth Skills Day 2025</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="test.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo" aria-label="WYSD 2025 Home">
+                <div class="logo-icon">🌟</div>
+                <span>WYSD 2025</span>
+            </a>
+            <ul class="nav-links" id="mainNav" role="menubar">
+                <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+                <li role="none"><a href="dashboard.html" role="menuitem">Dashboard</a></li>
+                <li role="none"><a href="test.html" role="menuitem">Assessment</a></li>
+                <li role="none"><a href="leaderboard.html" role="menuitem">Leaderboard</a></li>
+                <li role="none"><a href="practice-test.html" role="menuitem">Practice Test</a></li>
+                <li role="none"><a href="analytics.html" id="analyticsTab" class="active" role="menuitem">Analytics</a></li>
+                <li role="none"><a href="result.html" role="menuitem">Results</a></li>
+            </ul>
+            <div class="user-info" id="userInfo">
+                <div class="user-avatar" id="userAvatar" aria-label="User Avatar">U</div>
+                <div class="user-details">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <span class="user-badge">PARTICIPANT</span>
+                </div>
+                <button class="logout-btn" onclick="logout()" aria-label="Logout">Logout</button>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="analytics-container">
+            <h1>Practice Test Analytics</h1>
+            <p>View all your previous practice test attempts and topic-wise performance.</p>
+            <div class="charts-row" style="display:flex; flex-wrap:wrap; gap:2rem; justify-content:center; margin-bottom:2rem;">
+                <div style="flex:1; min-width:320px; max-width:400px;">
+                    <h3 style="text-align:center;">Topic-wise Performance</h3>
+                    <canvas id="topicRingChart" width="350" height="350"></canvas>
+                </div>
+                <div style="flex:1; min-width:320px; max-width:400px;">
+                    <h3 style="text-align:center;">Right vs Wrong (Latest Attempt)</h3>
+                    <canvas id="rightWrongRingChart" width="350" height="350"></canvas>
+                </div>
+            </div>
+            <div style="margin-bottom:2rem;">
+                <h3 style="text-align:center;">Progress Over Time</h3>
+                <canvas id="progressLineChart" width="900" height="350"></canvas>
+            </div>
+            <div id="analyticsContent">
+                <div class="loading" id="loadingSpinner">Loading analytics...</div>
+            </div>
+        </div>
+    </div>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+        import { getFirestore, collection, query, where, orderBy, getDocs } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD2WcLwVWvylk6fiEietUSDRp4JG9PnI8o",
+            authDomain: "wysd-a7d59.firebaseapp.com",
+            projectId: "wysd-a7d59",
+            storageBucket: "wysd-a7d59.firebasestorage.app",
+            messagingSenderId: "942089219233",
+            appId: "1:942089219233:web:4f4a7736325a0602ba94e0",
+            measurementId: "G-FHVP7SJQLH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        function updateUserInfo(user) {
+            const userName = document.getElementById('userName');
+            const userAvatar = document.getElementById('userAvatar');
+            if (user && user.displayName) {
+                userName.textContent = user.displayName;
+                userAvatar.textContent = user.displayName[0].toUpperCase();
+            } else if (user && user.email) {
+                userName.textContent = user.email;
+                userAvatar.textContent = user.email[0].toUpperCase();
+            } else {
+                userName.textContent = 'Guest';
+                userAvatar.textContent = 'U';
+            }
+        }
+
+        function logout() {
+            auth.signOut().then(() => {
+                window.location.href = 'login.html';
+            });
+        }
+
+        // Chart rendering helpers
+        function renderTopicRingChart(topicStats) {
+            const ctx = document.getElementById('topicRingChart').getContext('2d');
+            const labels = Object.keys(topicStats);
+            const data = labels.map(topic => topicStats[topic].correct);
+            const total = labels.map(topic => topicStats[topic].total);
+            const bgColors = ['#2a7ae4','#10b981','#f59e0b','#ef4444'];
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Correct Answers',
+                        data,
+                        backgroundColor: bgColors,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: { callbacks: { label: function(context) {
+                            const idx = context.dataIndex;
+                            return `${labels[idx]}: ${data[idx]}/${total[idx]} correct`;
+                        }}}
+                    }
+                }
+            });
+        }
+
+        function renderRightWrongRingChart(score, total) {
+            const ctx = document.getElementById('rightWrongRingChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Correct','Wrong'],
+                    datasets: [{
+                        data: [score, total-score],
+                        backgroundColor: ['#10b981','#ef4444'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: { callbacks: { label: function(context) {
+                            return `${context.label}: ${context.parsed}`;
+                        }}}
+                    }
+                }
+            });
+        }
+
+        function renderProgressLineChart(attempts) {
+            const ctx = document.getElementById('progressLineChart').getContext('2d');
+            const labels = attempts.map(a => new Date(a.attemptTimestamp).toLocaleDateString());
+            const scores = attempts.map(a => a.score);
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Score',
+                        data: scores,
+                        fill: false,
+                        borderColor: '#2a7ae4',
+                        backgroundColor: '#2a7ae4',
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: false },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Score' } },
+                        x: { title: { display: true, text: 'Date' } }
+                    }
+                }
+            });
+        }
+
+        async function loadAnalytics(user) {
+            const analyticsContent = document.getElementById('analyticsContent');
+            analyticsContent.innerHTML = '<div class="loading" id="loadingSpinner">Loading analytics...</div>';
+            let userId = user ? user.uid : null;
+            if (!userId) {
+                analyticsContent.innerHTML = '<div class="message warning">Please login to view your analytics.</div>';
+                return;
+            }
+            const q = query(collection(db, "practice_tests"), where("userId", "==", userId), orderBy("attemptTimestamp", "asc"));
+            const snapshot = await getDocs(q);
+            if (snapshot.empty) {
+                analyticsContent.innerHTML = '<div class="message info">No practice test attempts found.</div>';
+                return;
+            }
+            // Prepare data for charts
+            const attempts = [];
+            snapshot.forEach(doc => attempts.push(doc.data()));
+            // Topic-wise ring chart (aggregate latest attempt)
+            const latest = attempts[attempts.length-1];
+            if (latest && latest.topicStats) {
+                renderTopicRingChart(latest.topicStats);
+            }
+            // Right/Wrong ring chart (latest attempt)
+            if (latest && latest.score !== undefined && latest.questions) {
+                renderRightWrongRingChart(latest.score, latest.questions.length);
+            }
+            // Progress line chart (all attempts)
+            renderProgressLineChart(attempts);
+            // Table
+            let html = '<table class="analytics-table"><thead><tr><th>Date</th><th>Score</th><th>Topics</th></tr></thead><tbody>';
+            attempts.forEach(data => {
+                const date = new Date(data.attemptTimestamp).toLocaleString();
+                let topicStats = '';
+                if (data.topicStats) {
+                    topicStats = Object.entries(data.topicStats).map(([topic, stats]) =>
+                        `${topic}: <span style="color:#2a7ae4">${stats.correct}</span>/<span style="color:#d32f2f">${stats.total}</span>`
+                    ).join(', ');
+                }
+                html += `<tr><td>${date}</td><td>${data.score}/${data.questions.length}</td><td>${topicStats}</td></tr>`;
+            });
+            html += '</tbody></table>';
+            analyticsContent.innerHTML = html;
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            updateUserInfo(user);
+            loadAnalytics(user);
+        });
+    </script>
+</body>
+</html>
