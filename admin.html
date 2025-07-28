@@ -26,7 +26,7 @@
                 <li><a href="admin.html" class="active">🔧 Admin Panel</a></li>
                 <li><a href="practice-test.html">📝 Practice Test</a></li>
                 <li><a href="analytics.html">📊 Analytics</a></li>
-                <li><a href="result.html">📋 Results</a></li>
+                
                 <!--<li><a href="#" onclick="showAdminWarning('leaderboard')" id="leaderboardLink">🏆 Leaderboard</a></li>
                 <li><a href="#" onclick="showAdminWarning('dashboard')" id="dashboardLink">📊 Dashboard</a></li>-->
             </ul>
@@ -369,7 +369,7 @@
             const mobileUserEmail = document.getElementById('mobileUserEmail');
             
             if (mobileUserName) {
-                mobileUserName.textContent = user.email.split('@')[0];
+                mobileUserName.textContent = user.name || user.email.split('@')[0];
             }
             if (mobileUserEmail) {
                 mobileUserEmail.textContent = user.email;
@@ -1286,7 +1286,7 @@
             if (user) {
                 const userSession = checkAdminAuth();
                 if (userSession) {
-                    document.getElementById('userName').textContent = user.email;
+                    document.getElementById('userName').textContent = user.name || user.email;
                     generateAvatar(user.email);
                     updateMobileUserInfo(user);
                     showAdminContent();

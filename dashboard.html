@@ -34,7 +34,6 @@
                 <li role="none"><a href="test.html" role="menuitem">Assessment</a></li>
                 <li role="none"><a href="practice-test.html" role="menuitem">Practice Test</a></li>
                 <li role="none"><a href="analytics.html" role="menuitem">Analytics</a></li>
-                <li role="none"><a href="result.html" role="menuitem">Results</a></li>
                 <li role="none"><a href="leaderboard.html" role="menuitem">Leaderboard</a></li>
             </ul>
 
@@ -490,29 +489,43 @@
         // SIMPLIFIED Authentication check
         onAuthStateChanged(auth, async (user) => {
             console.log('🔐 Auth state changed:', user ? 'LOGGED IN' : 'LOGGED OUT');
-            
             if (user) {
                 console.log('✅ User authenticated:', user.email);
-                
-                const userSession = localStorage.getItem('wysd_user');
-                if (userSession) {
-                    try {
-                        const userData = JSON.parse(userSession);
-                        await loadUserDashboardData(user);
-                        hideLoadingScreen();
-                    } catch (e) {
-                        console.error('❌ Invalid session data:', e);
-                        localStorage.removeItem('wysd_user');
-                        redirectToLogin();
-                    }
-                } else {
-                    redirectToLogin();
-                }
+                updateUserInfo(user);
+                await loadUserDashboardData(user);
+                hideLoadingScreen();
             } else {
                 console.log('⚠️ No user authenticated');
                 redirectToLogin();
             }
         });
+                // Update user info (username and avatar) using Firestore registration name or email prefix
+        function updateUserInfo(user) {
+            const userName = document.getElementById('userName');
+            const userAvatar = document.getElementById('userAvatar');
+            if (user && user.uid) {
+                // Fetch name from registrations
+                import('https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js').then(({ getFirestore, collection, query, where, getDocs }) => {
+                    const db = getFirestore();
+                    getDocs(query(collection(db, 'registrations'), where('uid', '==', user.uid))).then(snapshot => {
+                        let display = user.email.split('@')[0];
+                        if (!snapshot.empty) {
+                            const data = snapshot.docs[0].data();
+                            if (data.name) display = data.name;
+                        }
+                        if (userName) userName.textContent = display;
+                        if (userAvatar) userAvatar.textContent = display[0].toUpperCase();
+                    });
+                });
+            } else if (user && user.email) {
+                const emailPrefix = user.email.split('@')[0];
+                if (userName) userName.textContent = emailPrefix;
+                if (userAvatar) userAvatar.textContent = emailPrefix[0].toUpperCase();
+            } else {
+                if (userName) userName.textContent = 'Guest';
+                if (userAvatar) userAvatar.textContent = 'U';
+            }
+        }
 
         // FIXED Load comprehensive user dashboard data
         async function loadUserDashboardData(currentUser) {

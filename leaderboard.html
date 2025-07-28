@@ -17,13 +17,14 @@
                 <div class="logo-icon">🌟</div>
                 <span>WYSD 2025</span>
             </a>
-            <ul class="nav-links" id="mainNav" role="menubar">
+
+            <!-- Desktop Navigation -->
+            <ul class="nav-links" role="menubar">
                 <li role="none"><a href="index.html" role="menuitem">Home</a></li>
                 <li role="none"><a href="dashboard.html" role="menuitem">Dashboard</a></li>
                 <li role="none"><a href="test.html" role="menuitem">Assessment</a></li>
                 <li role="none"><a href="practice-test.html" role="menuitem">Practice Test</a></li>
                 <li role="none"><a href="analytics.html" role="menuitem">Analytics</a></li>
-                <li role="none"><a href="result.html" role="menuitem">Results</a></li>
                 <li role="none"><a href="leaderboard.html" class="active" role="menuitem">Leaderboard</a></li>
             </ul>
 
@@ -589,19 +590,42 @@
         };
 
         // Initialize page
-        onAuthStateChanged(auth, (user) => {
+      onAuthStateChanged(auth, (user) => {
+            function updateUserInfo(user) {
+                const userName = document.getElementById('userName');
+                const userAvatar = document.getElementById('userAvatar');
+                const mobileUserName = document.getElementById('mobileUserName');
+                if (user && user.uid) {
+                    import('https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js').then(({ getFirestore, collection, query, where, getDocs }) => {
+                        const db = getFirestore();
+                        getDocs(query(collection(db, 'registrations'), where('uid', '==', user.uid))).then(snapshot => {
+                            let display = user.email.split('@')[0];
+                            if (!snapshot.empty) {
+                                const data = snapshot.docs[0].data();
+                                if (data.name) display = data.name;
+                            }
+                            if (userName) userName.textContent = display;
+                            if (mobileUserName) mobileUserName.textContent = display;
+                            if (userAvatar) userAvatar.textContent = display[0].toUpperCase();
+                        });
+                    });
+                } else if (user && user.email) {
+                    const emailPrefix = user.email.split('@')[0];
+                    if (userName) userName.textContent = emailPrefix;
+                    if (mobileUserName) mobileUserName.textContent = emailPrefix;
+                    if (userAvatar) userAvatar.textContent = emailPrefix[0].toUpperCase();
+                } else {
+                    if (userName) userName.textContent = 'Guest';
+                    if (mobileUserName) mobileUserName.textContent = 'Guest';
+                    if (userAvatar) userAvatar.textContent = 'U';
+                }
+            }
             if (user) {
                 const userInfo = document.getElementById('userInfo');
                 const mobileUserSection = document.getElementById('mobileUserSection');
-                const userName = document.getElementById('userName');
-                const mobileUserName = document.getElementById('mobileUserName');
-                
                 if (userInfo) userInfo.style.display = 'flex';
                 if (mobileUserSection) mobileUserSection.style.display = 'block';
-                if (userName) userName.textContent = user.email;
-                if (mobileUserName) mobileUserName.textContent = user.email;
-                
-                generateAvatar(user.email);
+                updateUserInfo(user);
             }
         });
 

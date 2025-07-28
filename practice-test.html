@@ -20,14 +20,13 @@
                 <div class="logo-icon">🌟</div>
                 <span>WYSD 2025</span>
             </a>
-            <ul class="nav-links" id="mainNav" role="menubar">
-                <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+            <ul class="nav-links" role="menubar">
+                <li role="none"><a href="index.html" class="active" role="menuitem">Home</a></li>
                 <li role="none"><a href="dashboard.html" role="menuitem">Dashboard</a></li>
-                <li role="none"><a href="test.html" id="assessmentTab" role="menuitem">Assessment</a></li>
+                <li role="none"><a href="test.html" role="menuitem">Assessment</a></li>
+                <li role="none"><a href="practice-test.html" id="practiceTab" class="active" role="menuitem">Practice Test</a></li>
+                <li role="none"><a href="analytics.html" role="menuitem">Analytics</a></li>
                 <li role="none"><a href="leaderboard.html" role="menuitem">Leaderboard</a></li>
-                <li role="none"><a href="practice-test.html" id="practiceTab" role="menuitem">Practice Test</a></li>
-                <li role="none"><a href="analytics.html" id="analyticsTab" role="menuitem">Analytics</a></li>
-                <li role="none"><a href="result.html" role="menuitem">Results</a></li>
             </ul>
             <div class="user-info" id="userInfo">
                 <div class="user-avatar" id="userAvatar" aria-label="User Avatar">U</div>
@@ -68,32 +67,51 @@
         function updateNavActive() {
             const today = new Date();
             const testDate = new Date('2025-07-15T00:00:00');
-            const assessmentTab = document.getElementById('assessmentTab');
             const practiceTab = document.getElementById('practiceTab');
             document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
             if (practiceTab) practiceTab.classList.add('active');
-            if (assessmentTab) {
-                if (today >= testDate) {
-                    assessmentTab.classList.add('active');
-                }
-            }
         }
         document.addEventListener('DOMContentLoaded', updateNavActive);
         // User info logic
-        function updateUserInfo(user) {
-            const userName = document.getElementById('userName');
-            const userAvatar = document.getElementById('userAvatar');
-            if (user && user.displayName) {
-                userName.textContent = user.displayName;
-                userAvatar.textContent = user.displayName[0].toUpperCase();
-            } else if (user && user.email) {
-                userName.textContent = user.email;
-                userAvatar.textContent = user.email[0].toUpperCase();
-            } else {
-                userName.textContent = 'Guest';
-                userAvatar.textContent = 'U';
+        onAuthStateChanged(auth, (user) => {
+            function updateUserInfo(user) {
+                const userName = document.getElementById('userName');
+                const userAvatar = document.getElementById('userAvatar');
+                const mobileUserName = document.getElementById('mobileUserName');
+                if (user && user.uid) {
+                    import('https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js').then(({ getFirestore, collection, query, where, getDocs }) => {
+                        const db = getFirestore();
+                        getDocs(query(collection(db, 'registrations'), where('uid', '==', user.uid))).then(snapshot => {
+                            let display = user.email.split('@')[0];
+                            if (!snapshot.empty) {
+                                const data = snapshot.docs[0].data();
+                                if (data.name) display = data.name;
+                            }
+                            if (userName) userName.textContent = display;
+                            if (mobileUserName) mobileUserName.textContent = display;
+                            if (userAvatar) userAvatar.textContent = display[0].toUpperCase();
+                        });
+                    });
+                } else if (user && user.email) {
+                    const emailPrefix = user.email.split('@')[0];
+                    if (userName) userName.textContent = emailPrefix;
+                    if (mobileUserName) mobileUserName.textContent = emailPrefix;
+                    if (userAvatar) userAvatar.textContent = emailPrefix[0].toUpperCase();
+                } else {
+                    if (userName) userName.textContent = 'Guest';
+                    if (mobileUserName) mobileUserName.textContent = 'Guest';
+                    if (userAvatar) userAvatar.textContent = 'U';
+                }
             }
-        }
+            if (user) {
+                const userInfo = document.getElementById('userInfo');
+                const mobileUserSection = document.getElementById('mobileUserSection');
+                if (userInfo) userInfo.style.display = 'flex';
+                if (mobileUserSection) mobileUserSection.style.display = 'block';
+                updateUserInfo(user);
+            }
+        });
+
 
         function logout() {
             auth.signOut().then(() => {

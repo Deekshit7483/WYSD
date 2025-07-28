@@ -46,13 +46,14 @@
             </a>
 
             <!-- Desktop Navigation -->
-            <ul class="nav-links" role="menubar">
+             <ul class="nav-links" role="menubar">
                 <li role="none"><a href="index.html" role="menuitem">Home</a></li>
                 <li role="none"><a href="dashboard.html" role="menuitem">Dashboard</a></li>
                 <li role="none"><a href="test.html" class="active" role="menuitem">Assessment</a></li>
+                <li role="none"><a href="practice-test.html" role="menuitem">Practice Test</a></li>
+                <li role="none"><a href="analytics.html" role="menuitem">Analytics</a></li>
                 <li role="none"><a href="leaderboard.html" role="menuitem">Leaderboard</a></li>
             </ul>
-
             <!-- Desktop User Info -->
             <div class="user-info" id="userInfo">
                 <div class="user-avatar" id="userAvatar" aria-label="User Avatar">U</div>
@@ -651,7 +652,6 @@
                         </div>
                         
                         <div style="margin-top: 2rem;">
-                            <a href="result.html" class="btn success">📊 View Detailed Results</a>
                             <a href="leaderboard.html" class="btn primary">🏆 View Leaderboard</a>
                             <a href="dashboard.html" class="btn secondary">📈 My Dashboard</a>
                         </div>
@@ -1225,7 +1225,7 @@
                 
                 // Redirect to result page
                 setTimeout(() => {
-                    window.location.href = 'result.html';
+                    window.location.href = 'analytics.html';
                 }, 3000);
                 
             } catch (error) {
@@ -1468,26 +1468,37 @@
                 menuZIndex: menu ? window.getComputedStyle(menu).zIndex : 'N/A'
             });
         });
-
+        function updateUserInfo(user) {
+            const userName = document.getElementById('userName');
+            const userAvatar = document.getElementById('userAvatar');
+            if (user && user.uid) {
+                // Fetch name from registrations
+                import('https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js').then(({ getFirestore, collection, query, where, getDocs }) => {
+                    const db = getFirestore();
+                    getDocs(query(collection(db, 'registrations'), where('uid', '==', user.uid))).then(snapshot => {
+                        let display = user.email.split('@')[0];
+                        if (!snapshot.empty) {
+                            const data = snapshot.docs[0].data();
+                            if (data.name) display = data.name;
+                        }
+                        if (userName) userName.textContent = display;
+                        if (userAvatar) userAvatar.textContent = display[0].toUpperCase();
+                    });
+                });
+            } else if (user && user.email) {
+                const emailPrefix = user.email.split('@')[0];
+                if (userName) userName.textContent = emailPrefix;
+                if (userAvatar) userAvatar.textContent = emailPrefix[0].toUpperCase();
+            } else {
+                if (userName) userName.textContent = 'Guest';
+                if (userAvatar) userAvatar.textContent = 'U';
+            }
+        }
         // Initialize test page
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                const userSession = checkAuth();
-                if (userSession) {
-                    const userNameElements = [
-                        document.getElementById('userName'),
-                        document.getElementById('mobileUserName')
-                    ];
-                    
-                    userNameElements.forEach(element => {
-                        if (element) {
-                            element.textContent = user.email;
-                        }
-                    });
-                    
-                    generateAvatar(user.email);
-                    checkTestAvailability();
-                }
+                updateUserInfo(user);
+                checkTestAvailability();
             } else {
                 checkAuth();
             }

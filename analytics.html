@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="test.css">
+    <link rel="stylesheet" href="dashboard.css">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+    <style>
+        body {
+            background: #fff !important;
+        }
+    </style>
+
 <body>
     <header>
         <nav>
@@ -18,15 +25,18 @@
                 <div class="logo-icon">🌟</div>
                 <span>WYSD 2025</span>
             </a>
-            <ul class="nav-links" id="mainNav" role="menubar">
+
+            <!-- Desktop Navigation -->
+            <ul class="nav-links" role="menubar">
                 <li role="none"><a href="index.html" role="menuitem">Home</a></li>
                 <li role="none"><a href="dashboard.html" role="menuitem">Dashboard</a></li>
                 <li role="none"><a href="test.html" role="menuitem">Assessment</a></li>
-                <li role="none"><a href="leaderboard.html" role="menuitem">Leaderboard</a></li>
                 <li role="none"><a href="practice-test.html" role="menuitem">Practice Test</a></li>
-                <li role="none"><a href="analytics.html" id="analyticsTab" class="active" role="menuitem">Analytics</a></li>
-                <li role="none"><a href="result.html" role="menuitem">Results</a></li>
+                <li role="none"><a href="analytics.html" class="active" role="menuitem">Analytics</a></li>
+                <li role="none"><a href="leaderboard.html" role="menuitem">Leaderboard</a></li>
             </ul>
+
+            <!-- Desktop User Info -->
             <div class="user-info" id="userInfo">
                 <div class="user-avatar" id="userAvatar" aria-label="User Avatar">U</div>
                 <div class="user-details">
@@ -35,13 +45,25 @@
                 </div>
                 <button class="logout-btn" onclick="logout()" aria-label="Logout">Logout</button>
             </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button 
+                class="mobile-menu-toggle" 
+                onclick="toggleMobileMenu()" 
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+                aria-controls="mobileNavMenu"
+            >
+                ☰
+            </button>
         </nav>
     </header>
     <div class="container">
         <div class="analytics-container">
             <h1>Practice Test Analytics</h1>
             <p>View all your previous practice test attempts and topic-wise performance.</p>
-            <div class="charts-row" style="display:flex; flex-wrap:wrap; gap:2rem; justify-content:center; margin-bottom:2rem;">
+            <div class="charts-row"
+                style="display:flex; flex-wrap:wrap; gap:2rem; justify-content:center; margin-bottom:2rem;">
                 <div style="flex:1; min-width:320px; max-width:400px;">
                     <h3 style="text-align:center;">Topic-wise Performance</h3>
                     <canvas id="topicRingChart" width="350" height="350"></canvas>
@@ -58,7 +80,8 @@
             <div id="analyticsContent">
                 <div class="loading" id="loadingSpinner">Loading analytics...</div>
             </div>
-        </div>
+
+        </div>       
     </div>
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
@@ -79,20 +102,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        function updateUserInfo(user) {
-            const userName = document.getElementById('userName');
-            const userAvatar = document.getElementById('userAvatar');
-            if (user && user.displayName) {
-                userName.textContent = user.displayName;
-                userAvatar.textContent = user.displayName[0].toUpperCase();
-            } else if (user && user.email) {
-                userName.textContent = user.email;
-                userAvatar.textContent = user.email[0].toUpperCase();
-            } else {
-                userName.textContent = 'Guest';
-                userAvatar.textContent = 'U';
-            }
-        }
+
 
         function logout() {
             auth.signOut().then(() => {
@@ -106,7 +116,7 @@
             const labels = Object.keys(topicStats);
             const data = labels.map(topic => topicStats[topic].correct);
             const total = labels.map(topic => topicStats[topic].total);
-            const bgColors = ['#2a7ae4','#10b981','#f59e0b','#ef4444'];
+            const bgColors = ['#2a7ae4', '#10b981', '#f59e0b', '#ef4444'];
             new Chart(ctx, {
                 type: 'doughnut',
                 data: {
@@ -120,11 +130,18 @@
                 },
                 options: {
                     plugins: {
-                        legend: { position: 'bottom' },
-                        tooltip: { callbacks: { label: function(context) {
-                            const idx = context.dataIndex;
-                            return `${labels[idx]}: ${data[idx]}/${total[idx]} correct`;
-                        }}}
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#000' }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const idx = context.dataIndex;
+                                    return `${labels[idx]}: ${data[idx]}/${total[idx]} correct`;
+                                }
+                            }
+                        }
                     }
                 }
             });
@@ -135,24 +152,57 @@
             new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Correct','Wrong'],
+                    labels: ['Correct', 'Wrong'],
                     datasets: [{
-                        data: [score, total-score],
-                        backgroundColor: ['#10b981','#ef4444'],
+                        data: [score, total - score],
+                        backgroundColor: ['#10b981', '#ef4444'],
                         borderWidth: 2
                     }]
                 },
                 options: {
                     plugins: {
-                        legend: { position: 'bottom' },
-                        tooltip: { callbacks: { label: function(context) {
-                            return `${context.label}: ${context.parsed}`;
-                        }}}
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#000' }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `${context.label}: ${context.parsed}`;
+                                }
+                            }
+                        }
                     }
                 }
             });
         }
-
+        // Unified updateUserInfo: fetches name from Firestore registrations, falls back to email prefix
+        function updateUserInfo(user) {
+            const userName = document.getElementById('userName');
+            const userAvatar = document.getElementById('userAvatar');
+            if (user && user.uid) {
+                // Fetch name from registrations
+                import('https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js').then(({ getFirestore, collection, query, where, getDocs }) => {
+                    const db = getFirestore();
+                    getDocs(query(collection(db, 'registrations'), where('uid', '==', user.uid))).then(snapshot => {
+                        let display = user.email.split('@')[0];
+                        if (!snapshot.empty) {
+                            const data = snapshot.docs[0].data();
+                            if (data.name) display = data.name;
+                        }
+                        if (userName) userName.textContent = display;
+                        if (userAvatar) userAvatar.textContent = display[0].toUpperCase();
+                    });
+                });
+            } else if (user && user.email) {
+                const emailPrefix = user.email.split('@')[0];
+                if (userName) userName.textContent = emailPrefix;
+                if (userAvatar) userAvatar.textContent = emailPrefix[0].toUpperCase();
+            } else {
+                if (userName) userName.textContent = 'Guest';
+                if (userAvatar) userAvatar.textContent = 'U';
+            }
+        }
         function renderProgressLineChart(attempts) {
             const ctx = document.getElementById('progressLineChart').getContext('2d');
             const labels = attempts.map(a => new Date(a.attemptTimestamp).toLocaleDateString());
@@ -175,7 +225,10 @@
                 options: {
                     responsive: true,
                     plugins: {
-                        legend: { display: false },
+                        legend: {
+                            display: false,
+                            labels: { color: '#000' }
+                        },
                         title: { display: false },
                         tooltip: { mode: 'index', intersect: false }
                     },
@@ -205,7 +258,7 @@
             const attempts = [];
             snapshot.forEach(doc => attempts.push(doc.data()));
             // Topic-wise ring chart (aggregate latest attempt)
-            const latest = attempts[attempts.length-1];
+            const latest = attempts[attempts.length - 1];
             if (latest && latest.topicStats) {
                 renderTopicRingChart(latest.topicStats);
             }
@@ -215,20 +268,8 @@
             }
             // Progress line chart (all attempts)
             renderProgressLineChart(attempts);
-            // Table
-            let html = '<table class="analytics-table"><thead><tr><th>Date</th><th>Score</th><th>Topics</th></tr></thead><tbody>';
-            attempts.forEach(data => {
-                const date = new Date(data.attemptTimestamp).toLocaleString();
-                let topicStats = '';
-                if (data.topicStats) {
-                    topicStats = Object.entries(data.topicStats).map(([topic, stats]) =>
-                        `${topic}: <span style="color:#2a7ae4">${stats.correct}</span>/<span style="color:#d32f2f">${stats.total}</span>`
-                    ).join(', ');
-                }
-                html += `<tr><td>${date}</td><td>${data.score}/${data.questions.length}</td><td>${topicStats}</td></tr>`;
-            });
-            html += '</tbody></table>';
-            analyticsContent.innerHTML = html;
+            // Only show charts, no table
+            analyticsContent.innerHTML = '';
         }
 
         onAuthStateChanged(auth, (user) => {
@@ -236,5 +277,41 @@
             loadAnalytics(user);
         });
     </script>
+     <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="logo-icon">🌟</div>
+                    WYSD 2025
+                </div>
+                <p class="footer-description">
+                    Empowering the next generation through comprehensive skills development and assessment.
+                    Join us in celebrating World Youth Skills Day 2025 and be part of a global movement
+                    towards educational excellence.
+                </p>
+
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="test.html">Assessment</a>
+                    <a href="leaderboard.html">Leaderboard</a>
+                    <a href="#about">About</a>
+                    <a href="#contact">Contact</a>
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#terms">Terms of Service</a>
+                </div>
+
+                <div class="footer-divider"></div>
+
+                <div class="footer-bottom">
+                    <div class="footer-copyright">
+                        <span>© 2025 World Youth Skills Day. All rights reserved.</span>
+                    </div>
+                    <div class="footer-developer">
+                        💻 Made by Deekshith H R ❤️
+                    </div>
+                </div>
+            </div>
+        </footer>
 </body>
+
 </html>
