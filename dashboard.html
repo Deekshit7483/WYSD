@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - World Youth Skills Day 2025</title>
+    <title>WYSD 2025</title>
+    <link rel="icon" type="image/x-icon" href="images/wysd-logo.png">
     <meta name="description" content="Your personalized dashboard for World Youth Skills Day 2025 - Track progress, view achievements, and manage your profile">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -700,7 +701,7 @@
             
             // Welcome section
             if (elements.welcomeTestStatus) {
-                elements.welcomeTestStatus.textContent = userData && userData.hasCompletedTest ? 'COMPLETED' : 'PENDING';
+                elements.welcomeTestStatus.textContent = userData && userData.hasCompletedTest ? 'DONE' : 'PENDING';
             }
             if (elements.welcomeScore) {
                 elements.welcomeScore.textContent = bestScore ? bestScore + '%' : '--';
@@ -723,7 +724,7 @@
             // Status card
             if (elements.statusCard && elements.statusText) {
                 if (userData && userData.hasCompletedTest) {
-                    elements.statusText.textContent = 'COMPLETED';
+                    elements.statusText.textContent = 'DONE';
                     elements.statusCard.className = 'performance-card';
                 } else {
                     elements.statusText.textContent = 'READY';
